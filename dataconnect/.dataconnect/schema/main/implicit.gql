@@ -1,0 +1,16 @@
+extend type DigitalProduct {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "DigitalProduct", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `DigitalProduct`.`producer`. It must match the value of `Producer`.`id`. See `@ref` for how to customize it.
+  """
+  producerId: UUID @fdc_generated(from: "DigitalProduct.producer", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Producer {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Producer", purpose: IMPLICIT_KEY_FIELD)
+}

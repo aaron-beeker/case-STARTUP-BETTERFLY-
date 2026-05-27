@@ -1,0 +1,37 @@
+mutation RegistrarProductor(
+  $fullName: String!
+  $contactEmail: String!
+  $bankAccount: String!
+) @auth(level: PUBLIC, insecureReason: "Demo public access") {
+  producer_insert(data: {
+    fullName: $fullName
+    contactEmail: $contactEmail
+    bankAccount: $bankAccount
+  })
+}
+
+mutation RegistrarProducto(
+  $title: String!
+  $format: String!
+  $niche: String!
+  $basePrice: Float!
+  $affiliateCommission: Float!
+  $producerId: UUID!
+) @auth(level: PUBLIC, insecureReason: "Demo public access") {
+  digitalProduct_insert(data: {
+    title: $title
+    format: $format
+    niche: $niche
+    basePrice: $basePrice
+    affiliateCommission: $affiliateCommission
+    producer: { id: $producerId }
+  })
+}
+
+mutation EliminarProducto($id: UUID!) @auth(level: PUBLIC, insecureReason: "Demo public access") {
+  digitalProduct_delete(id: $id)
+}
+
+mutation EliminarProductor($id: UUID!) @auth(level: PUBLIC, insecureReason: "Demo public access") {
+  producer_delete(id: $id)
+}

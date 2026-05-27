@@ -1,0 +1,108 @@
+extend type Query {
+  """
+  ✨ Look up a single `DigitalProduct` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  digitalProduct(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: DigitalProduct_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: DigitalProduct_FirstRow
+  ): DigitalProduct @fdc_generated(from: "DigitalProduct", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Producer` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  producer(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Producer_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Producer_FirstRow
+  ): Producer @fdc_generated(from: "Producer", purpose: QUERY_SINGLE)
+  """
+  ✨ List `DigitalProduct` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  digitalProducts(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: DigitalProduct_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [DigitalProduct_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: DigitalProduct_Having
+  ): [DigitalProduct!]! @fdc_generated(from: "DigitalProduct", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Producer` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  producers(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Producer_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Producer_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Producer_Having
+  ): [Producer!]! @fdc_generated(from: "Producer", purpose: QUERY_MULTIPLE)
+}

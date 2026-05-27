@@ -1,0 +1,14 @@
+type Producer @table {
+  fullName: String!
+  contactEmail: String!
+  bankAccount: String!
+}
+
+type DigitalProduct @table {
+  title: String!
+  format: String!
+  niche: String!
+  basePrice: Float!
+  affiliateCommission: Float!
+  producer: Producer
+}

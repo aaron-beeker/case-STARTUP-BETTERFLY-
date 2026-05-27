@@ -1,0 +1,226 @@
+extend type Mutation {
+  """
+  ✨ Insert a single `DigitalProduct` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  digitalProduct_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: DigitalProduct_Data!
+  ): DigitalProduct_KeyOutput! @fdc_generated(from: "DigitalProduct", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Producer` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  producer_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Producer_Data!
+  ): Producer_KeyOutput! @fdc_generated(from: "Producer", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert `DigitalProduct` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  digitalProduct_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [DigitalProduct_Data!]!
+  ): [DigitalProduct_KeyOutput!]! @fdc_generated(from: "DigitalProduct", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Producer` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  producer_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Producer_Data!]!
+  ): [Producer_KeyOutput!]! @fdc_generated(from: "Producer", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert or update a single `DigitalProduct` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `DigitalProduct`.
+  """
+  digitalProduct_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: DigitalProduct_Data!
+  ): DigitalProduct_KeyOutput! @fdc_generated(from: "DigitalProduct", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Producer` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Producer`.
+  """
+  producer_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Producer_Data!
+  ): Producer_KeyOutput! @fdc_generated(from: "Producer", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update `DigitalProduct` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `DigitalProduct`.
+  """
+  digitalProduct_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [DigitalProduct_Data!]!
+  ): [DigitalProduct_KeyOutput!]! @fdc_generated(from: "DigitalProduct", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Producer` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Producer`.
+  """
+  producer_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Producer_Data!]!
+  ): [Producer_KeyOutput!]! @fdc_generated(from: "Producer", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Update a single `DigitalProduct` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `DigitalProduct` or `null` if not found.
+  """
+  digitalProduct_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: DigitalProduct_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: DigitalProduct_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: DigitalProduct_Data!
+  ): DigitalProduct_KeyOutput @fdc_generated(from: "DigitalProduct", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Producer` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Producer` or `null` if not found.
+  """
+  producer_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Producer_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Producer_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Producer_Data!
+  ): Producer_KeyOutput @fdc_generated(from: "Producer", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update `DigitalProduct` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  digitalProduct_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: DigitalProduct_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: DigitalProduct_Data!
+  ): Int! @fdc_generated(from: "DigitalProduct", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Producer` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  producer_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Producer_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Producer_Data!
+  ): Int! @fdc_generated(from: "Producer", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Delete a single `DigitalProduct` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  digitalProduct_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: DigitalProduct_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: DigitalProduct_FirstRow
+  ): DigitalProduct_KeyOutput @fdc_generated(from: "DigitalProduct", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Producer` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  producer_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Producer_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Producer_FirstRow
+  ): Producer_KeyOutput @fdc_generated(from: "Producer", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete `DigitalProduct` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  digitalProduct_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: DigitalProduct_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "DigitalProduct", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Producer` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  producer_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Producer_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Producer", purpose: DELETE_MULTIPLE)
+}

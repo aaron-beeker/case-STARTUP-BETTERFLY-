@@ -1,0 +1,213 @@
+extend type DigitalProduct {
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "DigitalProduct", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `DigitalProduct` table.
+  """
+  _count: Int! @fdc_generated(from: "DigitalProduct.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `DigitalProduct` table where the `affiliateCommission` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  affiliateCommission_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "DigitalProduct.affiliateCommission", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `DigitalProduct` table where the `basePrice` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  basePrice_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "DigitalProduct.basePrice", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `DigitalProduct` table where the `format` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  format_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "DigitalProduct.format", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `DigitalProduct` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "DigitalProduct.id", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `DigitalProduct` table where the `niche` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  niche_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "DigitalProduct.niche", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `DigitalProduct` table where the `producerId` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  producerId_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "DigitalProduct.producerId", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `DigitalProduct` table where the `title` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  title_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "DigitalProduct.title", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `affiliateCommission` field in the `DigitalProduct` table.
+  """
+  affiliateCommission_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "DigitalProduct.affiliateCommission", purpose: QUERY_SUM)
+  """
+  ✨ Sum the `basePrice` field in the `DigitalProduct` table.
+  """
+  basePrice_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "DigitalProduct.basePrice", purpose: QUERY_SUM)
+  """
+  ✨ Average the `affiliateCommission` field in the `DigitalProduct` table.
+  """
+  affiliateCommission_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "DigitalProduct.affiliateCommission", purpose: QUERY_AVG)
+  """
+  ✨ Average the `basePrice` field in the `DigitalProduct` table.
+  """
+  basePrice_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "DigitalProduct.basePrice", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `affiliateCommission` field in the `DigitalProduct` table.
+  """
+  affiliateCommission_min: Float @fdc_generated(from: "DigitalProduct.affiliateCommission", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `basePrice` field in the `DigitalProduct` table.
+  """
+  basePrice_min: Float @fdc_generated(from: "DigitalProduct.basePrice", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `affiliateCommission` field in the `DigitalProduct` table.
+  """
+  affiliateCommission_max: Float @fdc_generated(from: "DigitalProduct.affiliateCommission", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `basePrice` field in the `DigitalProduct` table.
+  """
+  basePrice_max: Float @fdc_generated(from: "DigitalProduct.basePrice", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "DigitalProduct.id", purpose: ENTITY_ID)
+}
+extend type Producer {
+  """
+  ✨ List `DigitalProduct` objects in a one-to-many relationship (where `DigitalProduct`.`producer` is this object).
+  """
+  digitalProducts_on_producer(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: DigitalProduct_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [DigitalProduct_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: DigitalProduct_Having
+  ): [DigitalProduct!]! @fdc_generated(from: "DigitalProduct.producer", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Producer", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Producer` table.
+  """
+  _count: Int! @fdc_generated(from: "Producer.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Producer` table where the `bankAccount` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  bankAccount_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Producer.bankAccount", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Producer` table where the `contactEmail` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  contactEmail_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Producer.contactEmail", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Producer` table where the `fullName` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  fullName_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Producer.fullName", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Producer` table where the `id` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  id_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Producer.id", purpose: QUERY_COUNT)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "Producer.id", purpose: ENTITY_ID)
+}

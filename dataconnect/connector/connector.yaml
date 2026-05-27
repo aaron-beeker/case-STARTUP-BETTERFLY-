@@ -1,0 +1,5 @@
+connectorId: "srm-connector"
+generate:
+  javascriptSdk:
+    outputDir: "../../src/generated/data"
+    package: "@hotmart-srm/data"

@@ -1,0 +1,19 @@
+specVersion: "v1"
+serviceId: "startup-homart-service"
+location: "us-east4"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "startup-homart-database"
+      cloudSql:
+        instanceId: "startup-homart-instance"
+      schemaMigration: "MIGRATE_COMPATIBLE"
+connectorDirs:
+  - "./connector"
+datasource:
+  postgresql:
+    database: "startup-homart-database"
+    cloudSql:
+      instanceId: "startup-homart-instance"
+    schemaMigration: "MIGRATE_COMPATIBLE"
