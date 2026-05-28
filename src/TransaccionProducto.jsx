@@ -1,62 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import { dataConnect } from './firebaseConfig'; 
 import { 
-  registrarProductor, 
-  registrarProducto, 
-  listarProductores, 
-  listarProductos,
-  eliminarProducto,
-  eliminarProductor
+  registrarProveedor, 
+  registrarBeneficio, 
+  listarProveedores, 
+  listarBeneficios,
+  eliminarBeneficio,
+  eliminarProveedor
 } from './generated/data';
 
 const TransaccionProducto = () => {
-  // Tabs: 'producto' (Registrar Producto) y 'productor' (Registrar Productor)
-  const [activoTab, setActivoTab] = useState('producto');
+  // Tabs: 'beneficio' (Registrar Beneficio) y 'proveedor' (Registrar Proveedor)
+  const [activoTab, setActivoTab] = useState('beneficio');
 
-  // Estado para el Producto Digital
-  const [producto, setProducto] = useState({
-    title: '',
-    format: 'Curso en línea',
-    niche: 'Negocios',
-    basePrice: '',
-    affiliateCommission: 80, // Hasta 80% según reglas de Hotmart
-    producerId: ''
+  // Estado para el Beneficio
+  const [beneficio, setBeneficio] = useState({
+    nombreBeneficio: '',
+    categoria: 'Seguro Dinámico',
+    valorEconomico: '',
+    costoPuntosGamificacion: 100,
+    proveedorId: ''
   });
 
-  // Estado para el Productor
-  const [productor, setProductor] = useState({
-    fullName: '',
-    contactEmail: '',
-    bankAccount: ''
+  // Estado para el Proveedor
+  const [proveedor, setProveedor] = useState({
+    razonSocial: '',
+    tipoSocio: 'Aseguradora',
+    emailContacto: ''
   });
 
   // Listas de datos
-  const [listaProductos, setListaProductos] = useState([]);
-  const [listaProductores, setListaProductores] = useState([]);
+  const [listaBeneficios, setListaBeneficios] = useState([]);
+  const [listaProveedores, setListaProveedores] = useState([]);
   const [cargando, setCargando] = useState(true);
 
   // Cargar datos relacionales desde la base de datos PostgreSQL
   const cargarDatos = async () => {
+    console.log("%c[SISTEMA DISTRIBUIDO] 📡 Iniciando conexión con Cloud SQL (PostgreSQL)...", "color: #10b981; font-weight: bold;");
     try {
       setCargando(true);
       
-      // Obtener productores y productos en paralelo
-      const [resProductores, resProductos] = await Promise.all([
-        listarProductores(dataConnect),
-        listarProductos(dataConnect)
+      // Obtener proveedores y beneficios en paralelo
+      const [resProveedores, resBeneficios] = await Promise.all([
+        listarProveedores(dataConnect),
+        listarBeneficios(dataConnect)
       ]);
 
-      const productores = resProductores.data?.producers || [];
-      const productos = resProductos.data?.digitalProducts || [];
+      const proveedores = resProveedores.data?.proveedorAsociados || [];
+      const beneficios = resBeneficios.data?.beneficioCatalogos || [];
 
-      setListaProductores(productores);
-      setListaProductos(productos);
+      setListaProveedores(proveedores);
+      setListaBeneficios(beneficios);
+      console.log(`%c[SISTEMA DISTRIBUIDO] 📥 Datos recuperados de PostgreSQL - Proveedores: ${proveedores.length} | Beneficios: ${beneficios.length}`, "color: #8b5cf6; font-weight: bold;");
 
-      // Auto-seleccionar el primer productor si está disponible y el estado está vacío
-      if (productores.length > 0) {
-        setProducto(prev => ({ 
+      // Auto-seleccionar el primer proveedor si está disponible y el estado está vacío
+      if (proveedores.length > 0) {
+        setBeneficio(prev => ({ 
           ...prev, 
-          producerId: prev.producerId || productores[0].id 
+          proveedorId: prev.proveedorId || proveedores[0].id 
         }));
       }
     } catch (error) {
@@ -68,133 +69,144 @@ const TransaccionProducto = () => {
 
   useEffect(() => {
     cargarDatos();
+
+    // Consulta en tiempo real: sondeo (polling) cada 4 segundos
+    const intervalo = setInterval(() => {
+      cargarDatos();
+    }, 4000);
+
+    return () => clearInterval(intervalo);
   }, []);
 
-  const manejarCambioProducto = (e) => {
+  const manejarCambioBeneficio = (e) => {
     const { name, value } = e.target;
-    setProducto({ 
-      ...producto, 
-      [name]: name === 'basePrice' || name === 'affiliateCommission' 
+    setBeneficio({ 
+      ...beneficio, 
+      [name]: name === 'valorEconomico' || name === 'costoPuntosGamificacion' 
         ? (value === '' ? '' : Number(value)) 
         : value 
     });
   };
 
-  const manejarCambioProductor = (e) => {
+  const manejarCambioProveedor = (e) => {
     const { name, value } = e.target;
-    setProductor({ ...productor, [name]: value });
+    setProveedor({ ...proveedor, [name]: value });
   };
 
-  // Acción para guardar el Productor
-  const ejecutarRegistrarProductor = async (e) => {
+  // Acción para guardar el Proveedor
+  const ejecutarRegistrarProveedor = async (e) => {
     e.preventDefault();
-    if (!productor.fullName || !productor.contactEmail || !productor.bankAccount) {
-      alert("Por favor completa todos los campos del productor.");
+    if (!proveedor.razonSocial || !proveedor.tipoSocio || !proveedor.emailContacto) {
+      alert("Por favor completa todos los campos del proveedor.");
       return;
     }
 
     try {
-      await registrarProductor(dataConnect, {
-        fullName: productor.fullName,
-        contactEmail: productor.contactEmail,
-        bankAccount: productor.bankAccount
+      await registrarProveedor(dataConnect, {
+        razonSocial: proveedor.razonSocial,
+        tipoSocio: proveedor.tipoSocio,
+        emailContacto: proveedor.emailContacto
       });
+      console.log("%c[BASE DE DATOS] ✅ Integridad referencial actualizada: Nuevo Proveedor Asociado registrado en PostgreSQL.", "color: #8b5cf6; font-weight: bold;");
 
-      alert("¡Productor registrado con éxito en PostgreSQL!");
+      alert("¡Proveedor registrado con éxito en PostgreSQL!");
       
-      // Limpiar formulario de productor
-      setProductor({ fullName: '', contactEmail: '', bankAccount: '' });
+      // Limpiar formulario de proveedor
+      setProveedor({ razonSocial: '', tipoSocio: 'Aseguradora', emailContacto: '' });
 
-      // Recargar datos y cambiar al tab de producto
+      // Recargar datos y cambiar al tab de beneficio
       await cargarDatos();
-      setActivoTab('producto');
+      setActivoTab('beneficio');
     } catch (error) {
-      console.error("Error al registrar productor: ", error);
-      alert("Error al conectar con la base de datos relacional para registrar productor.");
+      console.error("Error al registrar proveedor: ", error);
+      alert("Error al conectar con la base de datos relacional para registrar proveedor.");
     }
   };
 
-  // Acción para guardar el Producto
-  const ejecutarRegistrarProducto = async (e) => {
+  // Acción para guardar el Beneficio
+  const ejecutarRegistrarBeneficio = async (e) => {
     e.preventDefault();
-    if (!producto.title || !producto.basePrice || !producto.producerId) {
-      alert("Por favor completa los campos obligatorios y selecciona un productor.");
+    if (!beneficio.nombreBeneficio || !beneficio.valorEconomico || !beneficio.proveedorId) {
+      alert("Por favor completa los campos obligatorios y selecciona un proveedor.");
       return;
     }
 
+    console.log("%c[API GATEWAY] 📤 Preparando Payload JSON para envío al Backend:", "color: #3b82f6; font-weight: bold;", {
+      nombreBeneficio: beneficio.nombreBeneficio,
+      categoria: beneficio.categoria,
+      valorEconomico: Number(beneficio.valorEconomico),
+      costoPuntosGamificacion: Number(beneficio.costoPuntosGamificacion),
+      proveedorId: beneficio.proveedorId
+    });
+
     try {
-      // Guardar el producto con referencia (foreign key) al productor
-      await registrarProducto(dataConnect, {
-        title: producto.title,
-        format: producto.format,
-        niche: producto.niche,
-        basePrice: Number(producto.basePrice),
-        affiliateCommission: Number(producto.affiliateCommission),
-        producerId: producto.producerId
+      await registrarBeneficio(dataConnect, {
+        nombreBeneficio: beneficio.nombreBeneficio,
+        categoria: beneficio.categoria,
+        valorEconomico: Number(beneficio.valorEconomico),
+        costoPuntosGamificacion: Number(beneficio.costoPuntosGamificacion),
+        proveedorId: beneficio.proveedorId
       });
+      console.log("%c[BASE DE DATOS] ✅ Transacción ACID completada con éxito. Registro insertado en la tabla BENEFICIO_CATALOGO.", "color: #10b981; font-weight: bold;");
 
-      alert("¡Producto registrado con éxito en PostgreSQL vinculado al productor!");
+      alert("¡Beneficio registrado con éxito en PostgreSQL vinculado al proveedor!");
 
-      // Limpiar formulario de producto (excepto categorías y productor seleccionado)
-      setProducto({
-        ...producto,
-        title: '',
-        basePrice: '',
-        affiliateCommission: 80
+      // Limpiar formulario de beneficio (excepto categorías y proveedor seleccionado)
+      setBeneficio({
+        ...beneficio,
+        nombreBeneficio: '',
+        valorEconomico: '',
+        costoPuntosGamificacion: 100
       });
 
       // Recargar datos
       await cargarDatos();
     } catch (error) {
-      console.error("Error al registrar producto: ", error);
-      alert("Error al registrar producto. Verifica la conexión con Cloud SQL / Postgres.");
+      console.error("Error al registrar beneficio: ", error);
+      alert("Error al registrar beneficio. Verifica la conexión con Cloud SQL / Postgres.");
     }
   };
 
-  // Acción para eliminar un Producto
-  const ejecutarEliminarProducto = async (id) => {
-    if (!window.confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+  // Acción para eliminar un Beneficio
+  const ejecutarEliminarBeneficio = async (id) => {
+    if (!window.confirm("¿Estás seguro de que deseas eliminar este beneficio?")) {
       return;
     }
 
     try {
-      await eliminarProducto(dataConnect, { id });
-      alert("¡Producto eliminado con éxito!");
+      await eliminarBeneficio(dataConnect, { id });
+      console.log(`%c[BASE DE DATOS] 🗑️ Transacción ACID completada con éxito. Registro eliminado de la tabla BENEFICIO_CATALOGO (ID: ${id}).`, "color: #ef4444; font-weight: bold;");
+      alert("¡Beneficio eliminado con éxito!");
       await cargarDatos();
     } catch (error) {
-      console.error("Error al eliminar producto: ", error);
-      alert("Error al eliminar el producto. Verifica la conexión con la base de datos.");
+      console.error("Error al eliminar beneficio: ", error);
+      alert("Error al eliminar el beneficio. Verifica la conexión con la base de datos.");
     }
   };
 
-  // Acción para eliminar un Productor
-  const ejecutarEliminarProductor = async (id) => {
-    // Validar si tiene productos asociados en el estado local antes de llamar a la DB
-    const tieneProductos = listaProductos.some(p => p.producer?.id === id);
-    if (tieneProductos) {
-      alert("No se puede eliminar este productor porque tiene productos digitales asociados. Por favor, elimina primero sus productos.");
+  // Acción para eliminar un Proveedor
+  const ejecutarEliminarProveedor = async (id) => {
+    // Validar si tiene beneficios asociados antes de eliminar
+    const tieneBeneficios = listaBeneficios.some(b => b.proveedor?.id === id);
+    if (tieneBeneficios) {
+      alert("No se puede eliminar este proveedor porque tiene beneficios asociados. Por favor, elimina primero sus beneficios.");
       return;
     }
 
-    if (!window.confirm("¿Estás seguro de que deseas eliminar este productor?")) {
+    if (!window.confirm("¿Estás seguro de que deseas eliminar este proveedor?")) {
       return;
     }
 
     try {
-      await eliminarProductor(dataConnect, { id });
-      alert("¡Productor eliminado con éxito!");
+      await eliminarProveedor(dataConnect, { id });
+      console.log(`%c[BASE DE DATOS] 🗑️ Integridad referencial: Proveedor Asociado eliminado de PostgreSQL (ID: ${id}).`, "color: #ef4444; font-weight: bold;");
+      alert("¡Proveedor eliminado con éxito!");
       await cargarDatos();
     } catch (error) {
-      console.error("Error al eliminar productor: ", error);
-      alert("Error al eliminar el productor. Puede que tenga productos asociados que no se han refrescado localmente.");
+      console.error("Error al eliminar proveedor: ", error);
+      alert("Error al eliminar el proveedor. Puede que tenga beneficios asociados que no se han refrescado localmente.");
     }
   };
-
-  // Cálculos dinámicos de comisiones
-  const precio = Number(producto.basePrice) || 0;
-  const comisionVal = Number(producto.affiliateCommission) || 0;
-  const gananciaAfiliado = (precio * (comisionVal / 100)).toFixed(2);
-  const gananciaProductor = (precio * (1 - comisionVal / 100)).toFixed(2);
 
   return (
     <div className="srm-container">
@@ -202,7 +214,7 @@ const TransaccionProducto = () => {
       <style>{`
         .srm-container {
           font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
-          background: radial-gradient(circle at 10% 20%, rgba(90, 18, 222, 0.1) 0%, rgba(0, 0, 0, 0) 90%), #0e0e13;
+          background: radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.12) 0%, rgba(139, 92, 246, 0.06) 90%), #0e0e13;
           color: #f3f4f6;
           min-height: 100vh;
           padding: 40px 20px;
@@ -222,7 +234,7 @@ const TransaccionProducto = () => {
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 3px;
-          background: linear-gradient(135deg, #ff5a19 0%, #ff9f43 100%);
+          background: linear-gradient(135deg, #10b981 0%, #8b5cf6 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           margin-bottom: 8px;
@@ -248,8 +260,8 @@ const TransaccionProducto = () => {
           align-items: center;
           gap: 6px;
           font-size: 12px;
-          color: #00bcd4;
-          background: rgba(0, 188, 212, 0.10);
+          color: #10b981;
+          background: rgba(16, 185, 129, 0.10);
           padding: 4px 10px;
           border-radius: 100px;
           margin-bottom: 24px;
@@ -259,14 +271,14 @@ const TransaccionProducto = () => {
           width: 8px;
           height: 8px;
           border-radius: 50%;
-          background: #00bcd4;
+          background: #10b981;
           animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-          0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 188, 212, 0.7); }
-          70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(0, 188, 212, 0); }
-          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 188, 212, 0); }
+          0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+          70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
 
         .srm-tabs {
@@ -294,9 +306,9 @@ const TransaccionProducto = () => {
         }
 
         .srm-tab-btn.active {
-          background: #ff5a19;
+          background: #10b981;
           color: #ffffff;
-          box-shadow: 0 4px 12px rgba(255, 90, 25, 0.3);
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         .srm-grid {
@@ -325,7 +337,7 @@ const TransaccionProducto = () => {
         }
 
         .srm-card:hover {
-          border-color: rgba(255, 90, 25, 0.3);
+          border-color: rgba(16, 185, 129, 0.3);
         }
 
         .srm-card-title {
@@ -367,8 +379,8 @@ const TransaccionProducto = () => {
 
         .srm-input:focus, .srm-select:focus {
           outline: none;
-          border-color: #ff5a19;
-          box-shadow: 0 0 0 3px rgba(255, 90, 25, 0.2);
+          border-color: #10b981;
+          box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
         }
 
         .srm-row-2 {
@@ -408,44 +420,14 @@ const TransaccionProducto = () => {
           width: 18px;
           height: 18px;
           border-radius: 50%;
-          background: #ff5a19;
+          background: #10b981;
           cursor: pointer;
-          box-shadow: 0 0 10px rgba(255, 90, 25, 0.5);
-        }
-
-        .srm-split-preview {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 12px;
-          padding-top: 12px;
-          border-top: 1px dashed rgba(255, 255, 255, 0.1);
-          font-size: 13px;
-        }
-
-        .srm-split-item {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-        }
-
-        .srm-split-val {
-          font-size: 16px;
-          font-weight: 700;
-          color: #ffffff;
-          margin-top: 2px;
-        }
-
-        .srm-split-val.producer {
-          color: #10b981;
-        }
-
-        .srm-split-val.affiliate {
-          color: #ff9f43;
+          box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
         }
 
         .srm-btn {
           width: 100%;
-          background: linear-gradient(135deg, #ff5a19 0%, #ff7730 50%, #ff9f43 100%);
+          background: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%);
           border: none;
           color: #ffffff;
           font-size: 16px;
@@ -453,7 +435,7 @@ const TransaccionProducto = () => {
           padding: 14px 20px;
           border-radius: 12px;
           cursor: pointer;
-          box-shadow: 0 8px 24px rgba(255, 90, 25, 0.35);
+          box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
           transition: all 0.3s ease;
           display: flex;
           justify-content: center;
@@ -464,7 +446,7 @@ const TransaccionProducto = () => {
 
         .srm-btn:hover {
           transform: translateY(-2px);
-          box-shadow: 0 12px 30px rgba(255, 90, 25, 0.5);
+          box-shadow: 0 12px 30px rgba(16, 185, 129, 0.5);
         }
 
         .srm-recent-list {
@@ -504,11 +486,24 @@ const TransaccionProducto = () => {
 
         .srm-item-nicho {
           font-size: 11px;
-          background: rgba(255, 90, 25, 0.15);
-          color: #ff7730;
           padding: 2px 8px;
           border-radius: 100px;
           font-weight: 600;
+        }
+
+        .srm-item-nicho.seguro {
+          background: rgba(139, 92, 246, 0.15);
+          color: #a78bfa;
+        }
+
+        .srm-item-nicho.regalo {
+          background: rgba(59, 130, 246, 0.15);
+          color: #60a5fa;
+        }
+
+        .srm-item-nicho.donacion {
+          background: rgba(16, 185, 129, 0.15);
+          color: #34d399;
         }
 
         .srm-item-details {
@@ -537,12 +532,12 @@ const TransaccionProducto = () => {
         }
 
         .srm-info-note {
-          background: rgba(255, 159, 67, 0.1);
-          border: 1px solid rgba(255, 159, 67, 0.3);
+          background: rgba(139, 92, 246, 0.1);
+          border: 1px solid rgba(139, 92, 246, 0.3);
           border-radius: 10px;
           padding: 12px;
           font-size: 13px;
-          color: #ff9f43;
+          color: #a78bfa;
           text-align: left;
           margin-bottom: 20px;
         }
@@ -569,9 +564,9 @@ const TransaccionProducto = () => {
       `}</style>
 
       <div className="srm-header">
-        <span className="srm-brand">Startup Homart</span>
-        <h1 className="srm-title">Hotmart SRM</h1>
-        <p className="srm-subtitle">Gestión de Transacciones de Productos Digitales</p>
+        <span className="srm-brand">Betterfly SRM</span>
+        <h1 className="srm-title">Betterfly SRM</h1>
+        <p className="srm-subtitle">Gestión de Recompensas y Donaciones</p>
       </div>
 
       <div className="srm-status">
@@ -582,235 +577,210 @@ const TransaccionProducto = () => {
       {/* Selector de Pestaña de Formulario */}
       <div className="srm-tabs">
         <button 
-          className={`srm-tab-btn ${activoTab === 'producto' ? 'active' : ''}`}
-          onClick={() => setActivoTab('producto')}
+          className={`srm-tab-btn ${activoTab === 'beneficio' ? 'active' : ''}`}
+          onClick={() => setActivoTab('beneficio')}
         >
-          Registrar Producto
+          Registrar Beneficio
         </button>
         <button 
-          className={`srm-tab-btn ${activoTab === 'productor' ? 'active' : ''}`}
-          onClick={() => setActivoTab('productor')}
+          className={`srm-tab-btn ${activoTab === 'proveedor' ? 'active' : ''}`}
+          onClick={() => setActivoTab('proveedor')}
         >
-          Registrar Productor
+          Registrar Proveedor
         </button>
       </div>
 
       <div className="srm-grid">
         {/* Panel Izquierdo: Formulario Dinámico según Pestaña */}
         <div className="srm-card">
-          {activoTab === 'producto' ? (
-            // FORMULARIO: REGISTRAR PRODUCTO
+          {activoTab === 'beneficio' ? (
+            // FORMULARIO: REGISTRAR BENEFICIO
             <>
               <div className="srm-card-title">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a19" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                 </svg>
-                Registrar Producto Digital
+                Registrar Beneficio del Catálogo
               </div>
 
-              {listaProductores.length === 0 && (
+              {listaProveedores.length === 0 && (
                 <div className="srm-info-note">
-                  ⚠️ No hay productores registrados en la base de datos. Por favor, ve primero a la pestaña <strong>"Registrar Productor"</strong> para crear uno antes de registrar productos.
+                  ⚠️ No hay proveedores registrados en la base de datos. Por favor, ve primero a la pestaña <strong>"Registrar Proveedor"</strong> para crear uno antes de registrar beneficios.
                 </div>
               )}
 
-              <form onSubmit={ejecutarRegistrarProducto}>
+              <form onSubmit={ejecutarRegistrarBeneficio}>
                 <div className="srm-form-group">
-                  <label className="srm-label">Título del Producto *</label>
+                  <label className="srm-label">Nombre del Beneficio *</label>
                   <input 
                     type="text" 
-                    name="title" 
+                    name="nombreBeneficio" 
                     className="srm-input" 
-                    placeholder="Ej. Curso Completo de Hotmart Marketing"
-                    value={producto.title}
-                    onChange={manejarCambioProducto}
+                    placeholder="Ej. Seguro de Vida Flexible o Giftcard Gimnasio"
+                    value={beneficio.nombreBeneficio}
+                    onChange={manejarCambioBeneficio}
                     required
                   />
                 </div>
 
                 <div className="srm-row-2">
                   <div className="srm-form-group">
-                    <label className="srm-label">Formato</label>
-                    <select name="format" className="srm-select" value={producto.format} onChange={manejarCambioProducto}>
-                      <option value="Curso en línea">Curso en línea</option>
-                      <option value="Ebook / PDF">Ebook / PDF</option>
-                      <option value="Suscripción / Membresía">Suscripción</option>
-                      <option value="Audio / Podcast">Audio / Podcast</option>
-                      <option value="Evento / Mentoría">Evento / Mentoría</option>
+                    <label className="srm-label">Categoría</label>
+                    <select name="categoria" className="srm-select" value={beneficio.categoria} onChange={manejarCambioBeneficio}>
+                      <option value="Seguro Dinámico">Seguro Dinámico</option>
+                      <option value="Tarjeta de Regalo">Tarjeta de Regalo</option>
+                      <option value="Donación Social">Donación Social</option>
                     </select>
                   </div>
 
                   <div className="srm-form-group">
-                    <label className="srm-label">Nicho</label>
-                    <select name="niche" className="srm-select" value={producto.niche} onChange={manejarCambioProducto}>
-                      <option value="Negocios">Negocios</option>
-                      <option value="Tecnología">Tecnología</option>
-                      <option value="Desarrollo Personal">Desarrollo Personal</option>
-                      <option value="Finanzas">Finanzas</option>
-                      <option value="Salud y Fitness">Salud y Fitness</option>
-                    </select>
+                    <label className="srm-label">Valor Económico (USD) *</label>
+                    <input 
+                      type="number" 
+                      name="valorEconomico" 
+                      className="srm-input" 
+                      placeholder="0.00"
+                      min="0.01"
+                      step="0.01"
+                      value={beneficio.valorEconomico}
+                      onChange={manejarCambioBeneficio}
+                      required
+                    />
                   </div>
                 </div>
 
                 <div className="srm-row-2">
                   <div className="srm-form-group">
-                    <label className="srm-label">Precio Base (USD) *</label>
-                    <input 
-                      type="number" 
-                      name="basePrice" 
-                      className="srm-input" 
-                      placeholder="0.00"
-                      min="0.99"
-                      step="0.01"
-                      value={producto.basePrice}
-                      onChange={manejarCambioProducto}
-                      required
-                    />
-                  </div>
-
-                  <div className="srm-form-group">
-                    <label className="srm-label">Productor Responsable *</label>
+                    <label className="srm-label">Proveedor Responsable *</label>
                     <select 
-                      name="producerId" 
+                      name="proveedorId" 
                       className="srm-select" 
-                      value={producto.producerId} 
-                      onChange={manejarCambioProducto}
+                      value={beneficio.proveedorId} 
+                      onChange={manejarCambioBeneficio}
                       required
-                      disabled={listaProductores.length === 0}
+                      disabled={listaProveedores.length === 0}
                     >
-                      {listaProductores.length === 0 ? (
-                        <option value="">-- Sin productores --</option>
+                      {listaProveedores.length === 0 ? (
+                        <option value="">-- Sin proveedores --</option>
                       ) : (
-                        listaProductores.map(p => (
+                        listaProveedores.map(p => (
                           <option key={p.id} value={p.id}>
-                            {p.fullName} ({p.contactEmail})
+                            {p.razonSocial} ({p.tipoSocio})
                           </option>
                         ))
                       )}
                     </select>
                   </div>
-                </div>
 
-                <div className="srm-form-group" style={{ marginTop: '8px' }}>
-                  <label className="srm-label">Comisión del Afiliado</label>
-                  <div className="srm-slider-container">
-                    <div className="srm-slider-header">
-                      <span>Porcentaje de Comisión</span>
-                      <span style={{ fontWeight: '700', color: '#ff9f43' }}>{producto.affiliateCommission}%</span>
-                    </div>
-                    <input 
-                      type="range" 
-                      name="affiliateCommission" 
-                      min="0" 
-                      max="80" 
-                      className="srm-slider"
-                      value={producto.affiliateCommission}
-                      onChange={manejarCambioProducto}
-                    />
-                    
-                    <div className="srm-split-preview">
-                      <div className="srm-split-item">
-                        <span style={{ color: '#9ca3af', fontSize: '11px' }}>Productor Recibe</span>
-                        <span className="srm-split-val producer">${gananciaProductor} USD</span>
+                  <div className="srm-form-group">
+                    <label className="srm-label">Costo en Puntos de Gamificación</label>
+                    <div className="srm-slider-container">
+                      <div className="srm-slider-header">
+                        <span>Puntos requeridos</span>
+                        <span style={{ fontWeight: '700', color: '#10b981' }}>{beneficio.costoPuntosGamificacion} pts</span>
                       </div>
-                      <div className="srm-split-item">
-                        <span style={{ color: '#9ca3af', fontSize: '11px' }}>Afiliado Recibe</span>
-                        <span className="srm-split-val affiliate">${gananciaAfiliado} USD</span>
-                      </div>
+                      <input 
+                        type="range" 
+                        name="costoPuntosGamificacion" 
+                        min="10" 
+                        max="1000" 
+                        step="10"
+                        className="srm-slider"
+                        value={beneficio.costoPuntosGamificacion}
+                        onChange={manejarCambioBeneficio}
+                      />
                     </div>
                   </div>
                 </div>
 
-                <button type="submit" className="srm-btn" disabled={listaProductores.length === 0}>
+                <button type="submit" className="srm-btn" disabled={listaProveedores.length === 0}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
                     <polyline points="17 21 17 13 7 13 7 21"/>
                     <polyline points="7 3 7 8 15 8"/>
                   </svg>
-                  Persistir Producto en Cloud SQL
+                  Persistir Beneficio en Cloud SQL
                 </button>
               </form>
             </>
           ) : (
-            // FORMULARIO: REGISTRAR PRODUCTOR
+            // FORMULARIO: REGISTRAR PROVEEDOR
             <>
               <div className="srm-card-title">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff9f43" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                   <circle cx="12" cy="7" r="4"/>
                 </svg>
-                Registrar Nuevo Productor
+                Registrar Proveedor Asociado
               </div>
 
-              <form onSubmit={ejecutarRegistrarProductor}>
+              <form onSubmit={ejecutarRegistrarProveedor}>
                 <div className="srm-form-group">
-                  <label className="srm-label">Nombre Completo *</label>
+                  <label className="srm-label">Razón Social *</label>
                   <input 
                     type="text" 
-                    name="fullName" 
+                    name="razonSocial" 
                     className="srm-input" 
-                    placeholder="Ej. Roberto Gómez Bolaños"
-                    value={productor.fullName}
-                    onChange={manejarCambioProductor}
+                    placeholder="Ej. SeguroVida S.A. o Fundación Planeta Verde"
+                    value={proveedor.razonSocial}
+                    onChange={manejarCambioProveedor}
                     required
                   />
                 </div>
 
-                <div className="srm-form-group">
-                  <label className="srm-label">Email de Contacto *</label>
-                  <input 
-                    type="email" 
-                    name="contactEmail" 
-                    className="srm-input" 
-                    placeholder="ejemplo@productor.com"
-                    value={productor.contactEmail}
-                    onChange={manejarCambioProductor}
-                    required
-                  />
+                <div className="srm-row-2">
+                  <div className="srm-form-group">
+                    <label className="srm-label">Tipo de Socio</label>
+                    <select name="tipoSocio" className="srm-select" value={proveedor.tipoSocio} onChange={manejarCambioProveedor}>
+                      <option value="Aseguradora">Aseguradora</option>
+                      <option value="Marca de Bienestar">Marca de Bienestar</option>
+                      <option value="ONG">ONG</option>
+                    </select>
+                  </div>
+
+                  <div className="srm-form-group">
+                    <label className="srm-label">Email de Contacto *</label>
+                    <input 
+                      type="email" 
+                      name="emailContacto" 
+                      className="srm-input" 
+                      placeholder="contacto@proveedor.com"
+                      value={proveedor.emailContacto}
+                      onChange={manejarCambioProveedor}
+                      required
+                    />
+                  </div>
                 </div>
 
-                <div className="srm-form-group">
-                  <label className="srm-label">Cuenta Bancaria para Depósitos (IBAN/CCI) *</label>
-                  <input 
-                    type="text" 
-                    name="bankAccount" 
-                    className="srm-input" 
-                    placeholder="Ej. ES12 3456 7890 1234 5678"
-                    value={productor.bankAccount}
-                    onChange={manejarCambioProductor}
-                    required
-                  />
-                </div>
-
-                <button type="submit" className="srm-btn" style={{ background: 'linear-gradient(135deg, #ff9f43 0%, #ff7730 100%)', boxShadow: '0 8px 24px rgba(255, 159, 67, 0.3)' }}>
+                <button type="submit" className="srm-btn" style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)', boxShadow: '0 8px 24px rgba(139, 92, 246, 0.3)' }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                   </svg>
-                  Crear Productor en PostgreSQL
+                  Crear Proveedor en PostgreSQL
                 </button>
               </form>
             </>
           )}
         </div>
 
-        {/* Panel Derecho: Lista Relacional de Productos o Productores según tab */}
+        {/* Panel Derecho: Lista Relacional de Beneficios o Proveedores según tab */}
         <div className="srm-card">
           <div className="srm-card-title">
-            {activoTab === 'producto' ? (
+            {activoTab === 'beneficio' ? (
               <>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff5a19" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                 </svg>
-                Productos en Cloud SQL
+                Beneficios en Cloud SQL
               </>
             ) : (
               <>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff9f43" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                   <circle cx="12" cy="7" r="4"/>
                 </svg>
-                Productores en Cloud SQL
+                Proveedores en Cloud SQL
               </>
             )}
           </div>
@@ -820,27 +790,30 @@ const TransaccionProducto = () => {
               <div style={{ textAlign: 'center', padding: '24px 0', color: '#9ca3af' }}>
                 Consultando base de datos relacional...
               </div>
-            ) : activoTab === 'producto' ? (
-              listaProductos.length === 0 ? (
+            ) : activoTab === 'beneficio' ? (
+              listaBeneficios.length === 0 ? (
                 <div className="srm-no-items">
-                  Aún no hay productos registrados en PostgreSQL. ¡Crea un productor y luego registra un producto digital!
+                  Aún no hay beneficios registrados en PostgreSQL. ¡Crea un proveedor y luego registra un beneficio!
                 </div>
               ) : (
-                listaProductos.map((item) => {
-                  const itemPrecio = Number(item.basePrice) || 0;
-                  const itemComision = Number(item.affiliateCommission) || 0;
-                  const itemGananciaProd = (itemPrecio * (1 - itemComision / 100)).toFixed(2);
+                listaBeneficios.map((item) => {
+                  const itemPrecio = Number(item.valorEconomico) || 0;
                   
+                  // Asignar clase de nicho / categoria
+                  let catClase = 'seguro';
+                  if (item.categoria === 'Tarjeta de Regalo') catClase = 'regalo';
+                  if (item.categoria === 'Donación Social') catClase = 'donacion';
+
                   return (
                     <div key={item.id} className="srm-recent-item">
                       <div className="srm-item-header">
-                        <span className="srm-item-title">{item.title}</span>
+                        <span className="srm-item-title">{item.nombreBeneficio}</span>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span className="srm-item-nicho">{item.niche}</span>
+                          <span className={`srm-item-nicho ${catClase}`}>{item.categoria}</span>
                           <button 
                             className="srm-delete-btn" 
-                            title="Eliminar Producto"
-                            onClick={() => ejecutarEliminarProducto(item.id)}
+                            title="Eliminar Beneficio"
+                            onClick={() => ejecutarEliminarBeneficio(item.id)}
                           >
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <polyline points="3 6 5 6 21 6"></polyline>
@@ -853,18 +826,14 @@ const TransaccionProducto = () => {
                       </div>
                       <div className="srm-item-details">
                         <div>
-                          Formato: <strong style={{ color: '#ffffff' }}>{item.format}</strong>
+                          Costo Real: <strong style={{ color: '#ffffff' }}>${itemPrecio.toFixed(2)} USD</strong>
                         </div>
                         <div>
-                          Precio: <strong style={{ color: '#ffffff' }}>${itemPrecio.toFixed(2)} USD</strong>
+                          Puntos: <strong style={{ color: '#10b981' }}>{item.costoPuntosGamificacion} pts</strong>
                         </div>
                       </div>
-                      <div className="srm-item-details" style={{ fontSize: '12px', borderTop: '1px dashed rgba(255, 255, 255, 0.05)', paddingTop: '6px' }}>
-                        <span>Comisión: {itemComision}%</span>
-                        <span>Neto Productor: <strong style={{ color: '#10b981' }}>${itemGananciaProd} USD</strong></span>
-                      </div>
-                      <div className="srm-item-details" style={{ fontSize: '12px', color: '#ff9f43' }}>
-                        Productor: <strong>{item.producer?.fullName || 'Desconocido'}</strong>
+                      <div className="srm-item-details" style={{ fontSize: '12px', borderTop: '1px dashed rgba(255, 255, 255, 0.05)', paddingTop: '6px', color: '#a78bfa' }}>
+                        Proveedor: <strong>{item.proveedor?.razonSocial || 'Desconocido'}</strong>
                       </div>
                       <div className="srm-item-id">
                         UUID Registro: {item.id}
@@ -874,36 +843,36 @@ const TransaccionProducto = () => {
                 })
               )
             ) : (
-              listaProductores.length === 0 ? (
+              listaProveedores.length === 0 ? (
                 <div className="srm-no-items">
-                  Aún no hay productores registrados en PostgreSQL. ¡Registra tu primer productor!
+                  Aún no hay proveedores registrados en PostgreSQL. ¡Registra tu primer proveedor!
                 </div>
               ) : (
-                listaProductores.map((item) => {
+                listaProveedores.map((item) => {
                   return (
                     <div key={item.id} className="srm-recent-item">
                       <div className="srm-item-header">
-                        <span className="srm-item-title" style={{ color: '#ff9f43' }}>{item.fullName}</span>
-                        <button 
-                          className="srm-delete-btn" 
-                          title="Eliminar Productor"
-                          onClick={() => ejecutarEliminarProductor(item.id)}
-                        >
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                            <line x1="10" y1="11" x2="10" y2="17"></line>
-                            <line x1="14" y1="11" x2="14" y2="17"></line>
-                          </svg>
-                        </button>
+                        <span className="srm-item-title" style={{ color: '#8b5cf6' }}>{item.razonSocial}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span className="srm-item-nicho seguro" style={{ background: 'rgba(139, 92, 246, 0.15)', color: '#a78bfa' }}>{item.tipoSocio}</span>
+                          <button 
+                            className="srm-delete-btn" 
+                            title="Eliminar Proveedor"
+                            onClick={() => ejecutarEliminarProveedor(item.id)}
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="3 6 5 6 21 6"></polyline>
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                              <line x1="10" y1="11" x2="10" y2="17"></line>
+                              <line x1="14" y1="11" x2="14" y2="17"></line>
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                       <div className="srm-item-details">
                         <div>
-                          Email: <strong style={{ color: '#ffffff' }}>{item.contactEmail}</strong>
+                          Email: <strong style={{ color: '#ffffff' }}>{item.emailContacto}</strong>
                         </div>
-                      </div>
-                      <div className="srm-item-details" style={{ fontSize: '12px', borderTop: '1px dashed rgba(255, 255, 255, 0.05)', paddingTop: '6px' }}>
-                        <span>Cuenta Bancaria: <strong style={{ color: '#ffffff' }}>{item.bankAccount}</strong></span>
                       </div>
                       <div className="srm-item-id">
                         UUID Registro: {item.id}

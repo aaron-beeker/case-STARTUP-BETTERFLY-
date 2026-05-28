@@ -14,26 +14,26 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { registrarProductor, registrarProducto, eliminarProducto, eliminarProductor, listarProductores, listarProductos } from '@hotmart-srm/data';
+import { registrarProveedor, registrarBeneficio, eliminarBeneficio, eliminarProveedor, listarProveedores, listarBeneficios } from '@hotmart-srm/data';
 
 
-// Operation RegistrarProductor:  For variables, look at type RegistrarProductorVars in ../index.d.ts
-const { data } = await RegistrarProductor(dataConnect, registrarProductorVars);
+// Operation RegistrarProveedor:  For variables, look at type RegistrarProveedorVars in ../index.d.ts
+const { data } = await RegistrarProveedor(dataConnect, registrarProveedorVars);
 
-// Operation RegistrarProducto:  For variables, look at type RegistrarProductoVars in ../index.d.ts
-const { data } = await RegistrarProducto(dataConnect, registrarProductoVars);
+// Operation RegistrarBeneficio:  For variables, look at type RegistrarBeneficioVars in ../index.d.ts
+const { data } = await RegistrarBeneficio(dataConnect, registrarBeneficioVars);
 
-// Operation EliminarProducto:  For variables, look at type EliminarProductoVars in ../index.d.ts
-const { data } = await EliminarProducto(dataConnect, eliminarProductoVars);
+// Operation EliminarBeneficio:  For variables, look at type EliminarBeneficioVars in ../index.d.ts
+const { data } = await EliminarBeneficio(dataConnect, eliminarBeneficioVars);
 
-// Operation EliminarProductor:  For variables, look at type EliminarProductorVars in ../index.d.ts
-const { data } = await EliminarProductor(dataConnect, eliminarProductorVars);
+// Operation EliminarProveedor:  For variables, look at type EliminarProveedorVars in ../index.d.ts
+const { data } = await EliminarProveedor(dataConnect, eliminarProveedorVars);
 
-// Operation ListarProductores: 
-const { data } = await ListarProductores(dataConnect);
+// Operation ListarProveedores: 
+const { data } = await ListarProveedores(dataConnect);
 
-// Operation ListarProductos: 
-const { data } = await ListarProductos(dataConnect);
+// Operation ListarBeneficios: 
+const { data } = await ListarBeneficios(dataConnect);
 
 
 ```

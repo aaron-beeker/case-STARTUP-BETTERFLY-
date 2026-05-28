@@ -7,88 +7,88 @@ const connectorConfig = {
 };
 exports.connectorConfig = connectorConfig;
 
-const registrarProductorRef = (dcOrVars, vars) => {
+const registrarProveedorRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'RegistrarProductor', inputVars);
+  return mutationRef(dcInstance, 'RegistrarProveedor', inputVars);
 }
-registrarProductorRef.operationName = 'RegistrarProductor';
-exports.registrarProductorRef = registrarProductorRef;
+registrarProveedorRef.operationName = 'RegistrarProveedor';
+exports.registrarProveedorRef = registrarProveedorRef;
 
-exports.registrarProductor = function registrarProductor(dcOrVars, vars) {
+exports.registrarProveedor = function registrarProveedor(dcOrVars, vars) {
   const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
-  return executeMutation(registrarProductorRef(dcInstance, inputVars));
+  return executeMutation(registrarProveedorRef(dcInstance, inputVars));
 }
 ;
 
-const registrarProductoRef = (dcOrVars, vars) => {
+const registrarBeneficioRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'RegistrarProducto', inputVars);
+  return mutationRef(dcInstance, 'RegistrarBeneficio', inputVars);
 }
-registrarProductoRef.operationName = 'RegistrarProducto';
-exports.registrarProductoRef = registrarProductoRef;
+registrarBeneficioRef.operationName = 'RegistrarBeneficio';
+exports.registrarBeneficioRef = registrarBeneficioRef;
 
-exports.registrarProducto = function registrarProducto(dcOrVars, vars) {
+exports.registrarBeneficio = function registrarBeneficio(dcOrVars, vars) {
   const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
-  return executeMutation(registrarProductoRef(dcInstance, inputVars));
+  return executeMutation(registrarBeneficioRef(dcInstance, inputVars));
 }
 ;
 
-const eliminarProductoRef = (dcOrVars, vars) => {
+const eliminarBeneficioRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'EliminarProducto', inputVars);
+  return mutationRef(dcInstance, 'EliminarBeneficio', inputVars);
 }
-eliminarProductoRef.operationName = 'EliminarProducto';
-exports.eliminarProductoRef = eliminarProductoRef;
+eliminarBeneficioRef.operationName = 'EliminarBeneficio';
+exports.eliminarBeneficioRef = eliminarBeneficioRef;
 
-exports.eliminarProducto = function eliminarProducto(dcOrVars, vars) {
+exports.eliminarBeneficio = function eliminarBeneficio(dcOrVars, vars) {
   const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
-  return executeMutation(eliminarProductoRef(dcInstance, inputVars));
+  return executeMutation(eliminarBeneficioRef(dcInstance, inputVars));
 }
 ;
 
-const eliminarProductorRef = (dcOrVars, vars) => {
+const eliminarProveedorRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
-  return mutationRef(dcInstance, 'EliminarProductor', inputVars);
+  return mutationRef(dcInstance, 'EliminarProveedor', inputVars);
 }
-eliminarProductorRef.operationName = 'EliminarProductor';
-exports.eliminarProductorRef = eliminarProductorRef;
+eliminarProveedorRef.operationName = 'EliminarProveedor';
+exports.eliminarProveedorRef = eliminarProveedorRef;
 
-exports.eliminarProductor = function eliminarProductor(dcOrVars, vars) {
+exports.eliminarProveedor = function eliminarProveedor(dcOrVars, vars) {
   const { dc: dcInstance, vars: inputVars } = validateArgs(connectorConfig, dcOrVars, vars, true);
-  return executeMutation(eliminarProductorRef(dcInstance, inputVars));
+  return executeMutation(eliminarProveedorRef(dcInstance, inputVars));
 }
 ;
 
-const listarProductoresRef = (dc) => {
+const listarProveedoresRef = (dc) => {
   const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListarProductores');
+  return queryRef(dcInstance, 'ListarProveedores');
 }
-listarProductoresRef.operationName = 'ListarProductores';
-exports.listarProductoresRef = listarProductoresRef;
+listarProveedoresRef.operationName = 'ListarProveedores';
+exports.listarProveedoresRef = listarProveedoresRef;
 
-exports.listarProductores = function listarProductores(dcOrOptions, options) {
+exports.listarProveedores = function listarProveedores(dcOrOptions, options) {
   
   const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined,false, false);
-  return executeQuery(listarProductoresRef(dcInstance, inputVars), inputOpts && inputOpts.fetchPolicy);
+  return executeQuery(listarProveedoresRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 ;
 
-const listarProductosRef = (dc) => {
+const listarBeneficiosRef = (dc) => {
   const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListarProductos');
+  return queryRef(dcInstance, 'ListarBeneficios');
 }
-listarProductosRef.operationName = 'ListarProductos';
-exports.listarProductosRef = listarProductosRef;
+listarBeneficiosRef.operationName = 'ListarBeneficios';
+exports.listarBeneficiosRef = listarBeneficiosRef;
 
-exports.listarProductos = function listarProductos(dcOrOptions, options) {
+exports.listarBeneficios = function listarBeneficios(dcOrOptions, options) {
   
   const { dc: dcInstance, vars: inputVars, options: inputOpts } = validateArgsWithOptions(connectorConfig, dcOrOptions, options, undefined,false, false);
-  return executeQuery(listarProductosRef(dcInstance, inputVars), inputOpts && inputOpts.fetchPolicy);
+  return executeQuery(listarBeneficiosRef(dcInstance, inputVars), inputOpts && { fetchPolicy: inputOpts.fetchPolicy });
 }
 ;

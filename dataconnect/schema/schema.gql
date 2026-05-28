@@ -1,14 +1,15 @@
-type Producer @table {
-  fullName: String!
-  contactEmail: String!
-  bankAccount: String!
+type ProveedorAsociado @table {
+  id: UUID! @default(expr: "uuidV4()")
+  razonSocial: String!
+  tipoSocio: String!
+  emailContacto: String!
 }
 
-type DigitalProduct @table {
-  title: String!
-  format: String!
-  niche: String!
-  basePrice: Float!
-  affiliateCommission: Float!
-  producer: Producer
+type BeneficioCatalogo @table {
+  id: UUID! @default(expr: "uuidV4()")
+  nombreBeneficio: String!
+  categoria: String!
+  valorEconomico: Float!
+  costoPuntosGamificacion: Int!
+  proveedor: ProveedorAsociado!
 }

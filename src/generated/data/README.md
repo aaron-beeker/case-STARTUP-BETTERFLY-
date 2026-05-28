@@ -8,13 +8,13 @@ This README will guide you through the process of using the generated JavaScript
 - [**Accessing the connector**](#accessing-the-connector)
   - [*Connecting to the local Emulator*](#connecting-to-the-local-emulator)
 - [**Queries**](#queries)
-  - [*ListarProductores*](#listarproductores)
-  - [*ListarProductos*](#listarproductos)
+  - [*ListarProveedores*](#listarproveedores)
+  - [*ListarBeneficios*](#listarbeneficios)
 - [**Mutations**](#mutations)
-  - [*RegistrarProductor*](#registrarproductor)
-  - [*RegistrarProducto*](#registrarproducto)
-  - [*EliminarProducto*](#eliminarproducto)
-  - [*EliminarProductor*](#eliminarproductor)
+  - [*RegistrarProveedor*](#registrarproveedor)
+  - [*RegistrarBeneficio*](#registrarbeneficio)
+  - [*EliminarBeneficio*](#eliminarbeneficio)
+  - [*EliminarProveedor*](#eliminarproveedor)
 
 # Accessing the connector
 A connector is a collection of Queries and Mutations. One SDK is generated for each connector - this SDK is generated for the connector `srm-connector`. You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
@@ -61,202 +61,200 @@ The following is true for both the action shortcut function and the `QueryRef` f
 
 Below are examples of how to use the `srm-connector` connector's generated functions to execute each query. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#using-queries).
 
-## ListarProductores
-You can execute the `ListarProductores` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [data/index.d.ts](./index.d.ts):
+## ListarProveedores
+You can execute the `ListarProveedores` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [data/index.d.ts](./index.d.ts):
 ```typescript
-listarProductores(options?: ExecuteQueryOptions): QueryPromise<ListarProductoresData, undefined>;
+listarProveedores(options?: ExecuteQueryOptions): QueryPromise<ListarProveedoresData, undefined>;
 
-interface ListarProductoresRef {
+interface ListarProveedoresRef {
   ...
   /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<ListarProductoresData, undefined>;
+  (): QueryRef<ListarProveedoresData, undefined>;
 }
-export const listarProductoresRef: ListarProductoresRef;
+export const listarProveedoresRef: ListarProveedoresRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
 ```typescript
-listarProductores(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListarProductoresData, undefined>;
+listarProveedores(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListarProveedoresData, undefined>;
 
-interface ListarProductoresRef {
+interface ListarProveedoresRef {
   ...
-  (dc: DataConnect): QueryRef<ListarProductoresData, undefined>;
+  (dc: DataConnect): QueryRef<ListarProveedoresData, undefined>;
 }
-export const listarProductoresRef: ListarProductoresRef;
+export const listarProveedoresRef: ListarProveedoresRef;
 ```
 
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the listarProductoresRef:
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the listarProveedoresRef:
 ```typescript
-const name = listarProductoresRef.operationName;
+const name = listarProveedoresRef.operationName;
 console.log(name);
 ```
 
 ### Variables
-The `ListarProductores` query has no variables.
+The `ListarProveedores` query has no variables.
 ### Return Type
-Recall that executing the `ListarProductores` query returns a `QueryPromise` that resolves to an object with a `data` property.
+Recall that executing the `ListarProveedores` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `ListarProductoresData`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
+The `data` property is an object of type `ListarProveedoresData`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
 ```typescript
-export interface ListarProductoresData {
-  producers: ({
+export interface ListarProveedoresData {
+  proveedorAsociados: ({
     id: UUIDString;
-    fullName: string;
-    contactEmail: string;
-    bankAccount: string;
-  } & Producer_Key)[];
+    razonSocial: string;
+    tipoSocio: string;
+    emailContacto: string;
+  } & ProveedorAsociado_Key)[];
 }
 ```
-### Using `ListarProductores`'s action shortcut function
+### Using `ListarProveedores`'s action shortcut function
 
 ```typescript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, listarProductores } from '@hotmart-srm/data';
+import { connectorConfig, listarProveedores } from '@hotmart-srm/data';
 
 
-// Call the `listarProductores()` function to execute the query.
+// Call the `listarProveedores()` function to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await listarProductores();
+const { data } = await listarProveedores();
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await listarProductores(dataConnect);
+const { data } = await listarProveedores(dataConnect);
 
-console.log(data.producers);
+console.log(data.proveedorAsociados);
 
 // Or, you can use the `Promise` API.
-listarProductores().then((response) => {
+listarProveedores().then((response) => {
   const data = response.data;
-  console.log(data.producers);
+  console.log(data.proveedorAsociados);
 });
 ```
 
-### Using `ListarProductores`'s `QueryRef` function
+### Using `ListarProveedores`'s `QueryRef` function
 
 ```typescript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
-import { connectorConfig, listarProductoresRef } from '@hotmart-srm/data';
+import { connectorConfig, listarProveedoresRef } from '@hotmart-srm/data';
 
 
-// Call the `listarProductoresRef()` function to get a reference to the query.
-const ref = listarProductoresRef();
+// Call the `listarProveedoresRef()` function to get a reference to the query.
+const ref = listarProveedoresRef();
 
 // You can also pass in a `DataConnect` instance to the `QueryRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = listarProductoresRef(dataConnect);
+const ref = listarProveedoresRef(dataConnect);
 
 // Call `executeQuery()` on the reference to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await executeQuery(ref);
 
-console.log(data.producers);
+console.log(data.proveedorAsociados);
 
 // Or, you can use the `Promise` API.
 executeQuery(ref).then((response) => {
   const data = response.data;
-  console.log(data.producers);
+  console.log(data.proveedorAsociados);
 });
 ```
 
-## ListarProductos
-You can execute the `ListarProductos` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [data/index.d.ts](./index.d.ts):
+## ListarBeneficios
+You can execute the `ListarBeneficios` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [data/index.d.ts](./index.d.ts):
 ```typescript
-listarProductos(options?: ExecuteQueryOptions): QueryPromise<ListarProductosData, undefined>;
+listarBeneficios(options?: ExecuteQueryOptions): QueryPromise<ListarBeneficiosData, undefined>;
 
-interface ListarProductosRef {
+interface ListarBeneficiosRef {
   ...
   /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<ListarProductosData, undefined>;
+  (): QueryRef<ListarBeneficiosData, undefined>;
 }
-export const listarProductosRef: ListarProductosRef;
+export const listarBeneficiosRef: ListarBeneficiosRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
 ```typescript
-listarProductos(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListarProductosData, undefined>;
+listarBeneficios(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListarBeneficiosData, undefined>;
 
-interface ListarProductosRef {
+interface ListarBeneficiosRef {
   ...
-  (dc: DataConnect): QueryRef<ListarProductosData, undefined>;
+  (dc: DataConnect): QueryRef<ListarBeneficiosData, undefined>;
 }
-export const listarProductosRef: ListarProductosRef;
+export const listarBeneficiosRef: ListarBeneficiosRef;
 ```
 
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the listarProductosRef:
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the listarBeneficiosRef:
 ```typescript
-const name = listarProductosRef.operationName;
+const name = listarBeneficiosRef.operationName;
 console.log(name);
 ```
 
 ### Variables
-The `ListarProductos` query has no variables.
+The `ListarBeneficios` query has no variables.
 ### Return Type
-Recall that executing the `ListarProductos` query returns a `QueryPromise` that resolves to an object with a `data` property.
+Recall that executing the `ListarBeneficios` query returns a `QueryPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `ListarProductosData`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
+The `data` property is an object of type `ListarBeneficiosData`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
 ```typescript
-export interface ListarProductosData {
-  digitalProducts: ({
+export interface ListarBeneficiosData {
+  beneficioCatalogos: ({
     id: UUIDString;
-    title: string;
-    format: string;
-    niche: string;
-    basePrice: number;
-    affiliateCommission: number;
-    producer?: {
+    nombreBeneficio: string;
+    categoria: string;
+    valorEconomico: number;
+    costoPuntosGamificacion: number;
+    proveedor: {
       id: UUIDString;
-      fullName: string;
-      contactEmail: string;
-    } & Producer_Key;
-  } & DigitalProduct_Key)[];
+      razonSocial: string;
+    } & ProveedorAsociado_Key;
+  } & BeneficioCatalogo_Key)[];
 }
 ```
-### Using `ListarProductos`'s action shortcut function
+### Using `ListarBeneficios`'s action shortcut function
 
 ```typescript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, listarProductos } from '@hotmart-srm/data';
+import { connectorConfig, listarBeneficios } from '@hotmart-srm/data';
 
 
-// Call the `listarProductos()` function to execute the query.
+// Call the `listarBeneficios()` function to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await listarProductos();
+const { data } = await listarBeneficios();
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await listarProductos(dataConnect);
+const { data } = await listarBeneficios(dataConnect);
 
-console.log(data.digitalProducts);
+console.log(data.beneficioCatalogos);
 
 // Or, you can use the `Promise` API.
-listarProductos().then((response) => {
+listarBeneficios().then((response) => {
   const data = response.data;
-  console.log(data.digitalProducts);
+  console.log(data.beneficioCatalogos);
 });
 ```
 
-### Using `ListarProductos`'s `QueryRef` function
+### Using `ListarBeneficios`'s `QueryRef` function
 
 ```typescript
 import { getDataConnect, executeQuery } from 'firebase/data-connect';
-import { connectorConfig, listarProductosRef } from '@hotmart-srm/data';
+import { connectorConfig, listarBeneficiosRef } from '@hotmart-srm/data';
 
 
-// Call the `listarProductosRef()` function to get a reference to the query.
-const ref = listarProductosRef();
+// Call the `listarBeneficiosRef()` function to get a reference to the query.
+const ref = listarBeneficiosRef();
 
 // You can also pass in a `DataConnect` instance to the `QueryRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = listarProductosRef(dataConnect);
+const ref = listarBeneficiosRef(dataConnect);
 
 // Call `executeQuery()` on the reference to execute the query.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await executeQuery(ref);
 
-console.log(data.digitalProducts);
+console.log(data.beneficioCatalogos);
 
 // Or, you can use the `Promise` API.
 executeQuery(ref).then((response) => {
   const data = response.data;
-  console.log(data.digitalProducts);
+  console.log(data.beneficioCatalogos);
 });
 ```
 
@@ -275,460 +273,457 @@ The following is true for both the action shortcut function and the `MutationRef
 
 Below are examples of how to use the `srm-connector` connector's generated functions to execute each mutation. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#using-mutations).
 
-## RegistrarProductor
-You can execute the `RegistrarProductor` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [data/index.d.ts](./index.d.ts):
+## RegistrarProveedor
+You can execute the `RegistrarProveedor` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [data/index.d.ts](./index.d.ts):
 ```typescript
-registrarProductor(vars: RegistrarProductorVariables): MutationPromise<RegistrarProductorData, RegistrarProductorVariables>;
+registrarProveedor(vars: RegistrarProveedorVariables): MutationPromise<RegistrarProveedorData, RegistrarProveedorVariables>;
 
-interface RegistrarProductorRef {
+interface RegistrarProveedorRef {
   ...
   /* Allow users to create refs without passing in DataConnect */
-  (vars: RegistrarProductorVariables): MutationRef<RegistrarProductorData, RegistrarProductorVariables>;
+  (vars: RegistrarProveedorVariables): MutationRef<RegistrarProveedorData, RegistrarProveedorVariables>;
 }
-export const registrarProductorRef: RegistrarProductorRef;
+export const registrarProveedorRef: RegistrarProveedorRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
 ```typescript
-registrarProductor(dc: DataConnect, vars: RegistrarProductorVariables): MutationPromise<RegistrarProductorData, RegistrarProductorVariables>;
+registrarProveedor(dc: DataConnect, vars: RegistrarProveedorVariables): MutationPromise<RegistrarProveedorData, RegistrarProveedorVariables>;
 
-interface RegistrarProductorRef {
+interface RegistrarProveedorRef {
   ...
-  (dc: DataConnect, vars: RegistrarProductorVariables): MutationRef<RegistrarProductorData, RegistrarProductorVariables>;
+  (dc: DataConnect, vars: RegistrarProveedorVariables): MutationRef<RegistrarProveedorData, RegistrarProveedorVariables>;
 }
-export const registrarProductorRef: RegistrarProductorRef;
+export const registrarProveedorRef: RegistrarProveedorRef;
 ```
 
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the registrarProductorRef:
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the registrarProveedorRef:
 ```typescript
-const name = registrarProductorRef.operationName;
+const name = registrarProveedorRef.operationName;
 console.log(name);
 ```
 
 ### Variables
-The `RegistrarProductor` mutation requires an argument of type `RegistrarProductorVariables`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
+The `RegistrarProveedor` mutation requires an argument of type `RegistrarProveedorVariables`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
 
 ```typescript
-export interface RegistrarProductorVariables {
-  fullName: string;
-  contactEmail: string;
-  bankAccount: string;
+export interface RegistrarProveedorVariables {
+  razonSocial: string;
+  tipoSocio: string;
+  emailContacto: string;
 }
 ```
 ### Return Type
-Recall that executing the `RegistrarProductor` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+Recall that executing the `RegistrarProveedor` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `RegistrarProductorData`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
+The `data` property is an object of type `RegistrarProveedorData`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
 ```typescript
-export interface RegistrarProductorData {
-  producer_insert: Producer_Key;
+export interface RegistrarProveedorData {
+  proveedorAsociado_insert: ProveedorAsociado_Key;
 }
 ```
-### Using `RegistrarProductor`'s action shortcut function
+### Using `RegistrarProveedor`'s action shortcut function
 
 ```typescript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, registrarProductor, RegistrarProductorVariables } from '@hotmart-srm/data';
+import { connectorConfig, registrarProveedor, RegistrarProveedorVariables } from '@hotmart-srm/data';
 
-// The `RegistrarProductor` mutation requires an argument of type `RegistrarProductorVariables`:
-const registrarProductorVars: RegistrarProductorVariables = {
-  fullName: ..., 
-  contactEmail: ..., 
-  bankAccount: ..., 
+// The `RegistrarProveedor` mutation requires an argument of type `RegistrarProveedorVariables`:
+const registrarProveedorVars: RegistrarProveedorVariables = {
+  razonSocial: ..., 
+  tipoSocio: ..., 
+  emailContacto: ..., 
 };
 
-// Call the `registrarProductor()` function to execute the mutation.
+// Call the `registrarProveedor()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await registrarProductor(registrarProductorVars);
+const { data } = await registrarProveedor(registrarProveedorVars);
 // Variables can be defined inline as well.
-const { data } = await registrarProductor({ fullName: ..., contactEmail: ..., bankAccount: ..., });
+const { data } = await registrarProveedor({ razonSocial: ..., tipoSocio: ..., emailContacto: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await registrarProductor(dataConnect, registrarProductorVars);
+const { data } = await registrarProveedor(dataConnect, registrarProveedorVars);
 
-console.log(data.producer_insert);
+console.log(data.proveedorAsociado_insert);
 
 // Or, you can use the `Promise` API.
-registrarProductor(registrarProductorVars).then((response) => {
+registrarProveedor(registrarProveedorVars).then((response) => {
   const data = response.data;
-  console.log(data.producer_insert);
+  console.log(data.proveedorAsociado_insert);
 });
 ```
 
-### Using `RegistrarProductor`'s `MutationRef` function
+### Using `RegistrarProveedor`'s `MutationRef` function
 
 ```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
-import { connectorConfig, registrarProductorRef, RegistrarProductorVariables } from '@hotmart-srm/data';
+import { connectorConfig, registrarProveedorRef, RegistrarProveedorVariables } from '@hotmart-srm/data';
 
-// The `RegistrarProductor` mutation requires an argument of type `RegistrarProductorVariables`:
-const registrarProductorVars: RegistrarProductorVariables = {
-  fullName: ..., 
-  contactEmail: ..., 
-  bankAccount: ..., 
+// The `RegistrarProveedor` mutation requires an argument of type `RegistrarProveedorVariables`:
+const registrarProveedorVars: RegistrarProveedorVariables = {
+  razonSocial: ..., 
+  tipoSocio: ..., 
+  emailContacto: ..., 
 };
 
-// Call the `registrarProductorRef()` function to get a reference to the mutation.
-const ref = registrarProductorRef(registrarProductorVars);
+// Call the `registrarProveedorRef()` function to get a reference to the mutation.
+const ref = registrarProveedorRef(registrarProveedorVars);
 // Variables can be defined inline as well.
-const ref = registrarProductorRef({ fullName: ..., contactEmail: ..., bankAccount: ..., });
+const ref = registrarProveedorRef({ razonSocial: ..., tipoSocio: ..., emailContacto: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = registrarProductorRef(dataConnect, registrarProductorVars);
+const ref = registrarProveedorRef(dataConnect, registrarProveedorVars);
 
 // Call `executeMutation()` on the reference to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await executeMutation(ref);
 
-console.log(data.producer_insert);
+console.log(data.proveedorAsociado_insert);
 
 // Or, you can use the `Promise` API.
 executeMutation(ref).then((response) => {
   const data = response.data;
-  console.log(data.producer_insert);
+  console.log(data.proveedorAsociado_insert);
 });
 ```
 
-## RegistrarProducto
-You can execute the `RegistrarProducto` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [data/index.d.ts](./index.d.ts):
+## RegistrarBeneficio
+You can execute the `RegistrarBeneficio` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [data/index.d.ts](./index.d.ts):
 ```typescript
-registrarProducto(vars: RegistrarProductoVariables): MutationPromise<RegistrarProductoData, RegistrarProductoVariables>;
+registrarBeneficio(vars: RegistrarBeneficioVariables): MutationPromise<RegistrarBeneficioData, RegistrarBeneficioVariables>;
 
-interface RegistrarProductoRef {
+interface RegistrarBeneficioRef {
   ...
   /* Allow users to create refs without passing in DataConnect */
-  (vars: RegistrarProductoVariables): MutationRef<RegistrarProductoData, RegistrarProductoVariables>;
+  (vars: RegistrarBeneficioVariables): MutationRef<RegistrarBeneficioData, RegistrarBeneficioVariables>;
 }
-export const registrarProductoRef: RegistrarProductoRef;
+export const registrarBeneficioRef: RegistrarBeneficioRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
 ```typescript
-registrarProducto(dc: DataConnect, vars: RegistrarProductoVariables): MutationPromise<RegistrarProductoData, RegistrarProductoVariables>;
+registrarBeneficio(dc: DataConnect, vars: RegistrarBeneficioVariables): MutationPromise<RegistrarBeneficioData, RegistrarBeneficioVariables>;
 
-interface RegistrarProductoRef {
+interface RegistrarBeneficioRef {
   ...
-  (dc: DataConnect, vars: RegistrarProductoVariables): MutationRef<RegistrarProductoData, RegistrarProductoVariables>;
+  (dc: DataConnect, vars: RegistrarBeneficioVariables): MutationRef<RegistrarBeneficioData, RegistrarBeneficioVariables>;
 }
-export const registrarProductoRef: RegistrarProductoRef;
+export const registrarBeneficioRef: RegistrarBeneficioRef;
 ```
 
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the registrarProductoRef:
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the registrarBeneficioRef:
 ```typescript
-const name = registrarProductoRef.operationName;
+const name = registrarBeneficioRef.operationName;
 console.log(name);
 ```
 
 ### Variables
-The `RegistrarProducto` mutation requires an argument of type `RegistrarProductoVariables`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
+The `RegistrarBeneficio` mutation requires an argument of type `RegistrarBeneficioVariables`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
 
 ```typescript
-export interface RegistrarProductoVariables {
-  title: string;
-  format: string;
-  niche: string;
-  basePrice: number;
-  affiliateCommission: number;
-  producerId: UUIDString;
+export interface RegistrarBeneficioVariables {
+  nombreBeneficio: string;
+  categoria: string;
+  valorEconomico: number;
+  costoPuntosGamificacion: number;
+  proveedorId: UUIDString;
 }
 ```
 ### Return Type
-Recall that executing the `RegistrarProducto` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+Recall that executing the `RegistrarBeneficio` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `RegistrarProductoData`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
+The `data` property is an object of type `RegistrarBeneficioData`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
 ```typescript
-export interface RegistrarProductoData {
-  digitalProduct_insert: DigitalProduct_Key;
+export interface RegistrarBeneficioData {
+  beneficioCatalogo_insert: BeneficioCatalogo_Key;
 }
 ```
-### Using `RegistrarProducto`'s action shortcut function
+### Using `RegistrarBeneficio`'s action shortcut function
 
 ```typescript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, registrarProducto, RegistrarProductoVariables } from '@hotmart-srm/data';
+import { connectorConfig, registrarBeneficio, RegistrarBeneficioVariables } from '@hotmart-srm/data';
 
-// The `RegistrarProducto` mutation requires an argument of type `RegistrarProductoVariables`:
-const registrarProductoVars: RegistrarProductoVariables = {
-  title: ..., 
-  format: ..., 
-  niche: ..., 
-  basePrice: ..., 
-  affiliateCommission: ..., 
-  producerId: ..., 
+// The `RegistrarBeneficio` mutation requires an argument of type `RegistrarBeneficioVariables`:
+const registrarBeneficioVars: RegistrarBeneficioVariables = {
+  nombreBeneficio: ..., 
+  categoria: ..., 
+  valorEconomico: ..., 
+  costoPuntosGamificacion: ..., 
+  proveedorId: ..., 
 };
 
-// Call the `registrarProducto()` function to execute the mutation.
+// Call the `registrarBeneficio()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await registrarProducto(registrarProductoVars);
+const { data } = await registrarBeneficio(registrarBeneficioVars);
 // Variables can be defined inline as well.
-const { data } = await registrarProducto({ title: ..., format: ..., niche: ..., basePrice: ..., affiliateCommission: ..., producerId: ..., });
+const { data } = await registrarBeneficio({ nombreBeneficio: ..., categoria: ..., valorEconomico: ..., costoPuntosGamificacion: ..., proveedorId: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await registrarProducto(dataConnect, registrarProductoVars);
+const { data } = await registrarBeneficio(dataConnect, registrarBeneficioVars);
 
-console.log(data.digitalProduct_insert);
+console.log(data.beneficioCatalogo_insert);
 
 // Or, you can use the `Promise` API.
-registrarProducto(registrarProductoVars).then((response) => {
+registrarBeneficio(registrarBeneficioVars).then((response) => {
   const data = response.data;
-  console.log(data.digitalProduct_insert);
+  console.log(data.beneficioCatalogo_insert);
 });
 ```
 
-### Using `RegistrarProducto`'s `MutationRef` function
+### Using `RegistrarBeneficio`'s `MutationRef` function
 
 ```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
-import { connectorConfig, registrarProductoRef, RegistrarProductoVariables } from '@hotmart-srm/data';
+import { connectorConfig, registrarBeneficioRef, RegistrarBeneficioVariables } from '@hotmart-srm/data';
 
-// The `RegistrarProducto` mutation requires an argument of type `RegistrarProductoVariables`:
-const registrarProductoVars: RegistrarProductoVariables = {
-  title: ..., 
-  format: ..., 
-  niche: ..., 
-  basePrice: ..., 
-  affiliateCommission: ..., 
-  producerId: ..., 
+// The `RegistrarBeneficio` mutation requires an argument of type `RegistrarBeneficioVariables`:
+const registrarBeneficioVars: RegistrarBeneficioVariables = {
+  nombreBeneficio: ..., 
+  categoria: ..., 
+  valorEconomico: ..., 
+  costoPuntosGamificacion: ..., 
+  proveedorId: ..., 
 };
 
-// Call the `registrarProductoRef()` function to get a reference to the mutation.
-const ref = registrarProductoRef(registrarProductoVars);
+// Call the `registrarBeneficioRef()` function to get a reference to the mutation.
+const ref = registrarBeneficioRef(registrarBeneficioVars);
 // Variables can be defined inline as well.
-const ref = registrarProductoRef({ title: ..., format: ..., niche: ..., basePrice: ..., affiliateCommission: ..., producerId: ..., });
+const ref = registrarBeneficioRef({ nombreBeneficio: ..., categoria: ..., valorEconomico: ..., costoPuntosGamificacion: ..., proveedorId: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = registrarProductoRef(dataConnect, registrarProductoVars);
+const ref = registrarBeneficioRef(dataConnect, registrarBeneficioVars);
 
 // Call `executeMutation()` on the reference to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await executeMutation(ref);
 
-console.log(data.digitalProduct_insert);
+console.log(data.beneficioCatalogo_insert);
 
 // Or, you can use the `Promise` API.
 executeMutation(ref).then((response) => {
   const data = response.data;
-  console.log(data.digitalProduct_insert);
+  console.log(data.beneficioCatalogo_insert);
 });
 ```
 
-## EliminarProducto
-You can execute the `EliminarProducto` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [data/index.d.ts](./index.d.ts):
+## EliminarBeneficio
+You can execute the `EliminarBeneficio` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [data/index.d.ts](./index.d.ts):
 ```typescript
-eliminarProducto(vars: EliminarProductoVariables): MutationPromise<EliminarProductoData, EliminarProductoVariables>;
+eliminarBeneficio(vars: EliminarBeneficioVariables): MutationPromise<EliminarBeneficioData, EliminarBeneficioVariables>;
 
-interface EliminarProductoRef {
+interface EliminarBeneficioRef {
   ...
   /* Allow users to create refs without passing in DataConnect */
-  (vars: EliminarProductoVariables): MutationRef<EliminarProductoData, EliminarProductoVariables>;
+  (vars: EliminarBeneficioVariables): MutationRef<EliminarBeneficioData, EliminarBeneficioVariables>;
 }
-export const eliminarProductoRef: EliminarProductoRef;
+export const eliminarBeneficioRef: EliminarBeneficioRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
 ```typescript
-eliminarProducto(dc: DataConnect, vars: EliminarProductoVariables): MutationPromise<EliminarProductoData, EliminarProductoVariables>;
+eliminarBeneficio(dc: DataConnect, vars: EliminarBeneficioVariables): MutationPromise<EliminarBeneficioData, EliminarBeneficioVariables>;
 
-interface EliminarProductoRef {
+interface EliminarBeneficioRef {
   ...
-  (dc: DataConnect, vars: EliminarProductoVariables): MutationRef<EliminarProductoData, EliminarProductoVariables>;
+  (dc: DataConnect, vars: EliminarBeneficioVariables): MutationRef<EliminarBeneficioData, EliminarBeneficioVariables>;
 }
-export const eliminarProductoRef: EliminarProductoRef;
+export const eliminarBeneficioRef: EliminarBeneficioRef;
 ```
 
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the eliminarProductoRef:
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the eliminarBeneficioRef:
 ```typescript
-const name = eliminarProductoRef.operationName;
+const name = eliminarBeneficioRef.operationName;
 console.log(name);
 ```
 
 ### Variables
-The `EliminarProducto` mutation requires an argument of type `EliminarProductoVariables`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
+The `EliminarBeneficio` mutation requires an argument of type `EliminarBeneficioVariables`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
 
 ```typescript
-export interface EliminarProductoVariables {
+export interface EliminarBeneficioVariables {
   id: UUIDString;
 }
 ```
 ### Return Type
-Recall that executing the `EliminarProducto` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+Recall that executing the `EliminarBeneficio` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `EliminarProductoData`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
+The `data` property is an object of type `EliminarBeneficioData`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
 ```typescript
-export interface EliminarProductoData {
-  digitalProduct_delete?: DigitalProduct_Key | null;
+export interface EliminarBeneficioData {
+  beneficioCatalogo_delete?: BeneficioCatalogo_Key | null;
 }
 ```
-### Using `EliminarProducto`'s action shortcut function
+### Using `EliminarBeneficio`'s action shortcut function
 
 ```typescript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, eliminarProducto, EliminarProductoVariables } from '@hotmart-srm/data';
+import { connectorConfig, eliminarBeneficio, EliminarBeneficioVariables } from '@hotmart-srm/data';
 
-// The `EliminarProducto` mutation requires an argument of type `EliminarProductoVariables`:
-const eliminarProductoVars: EliminarProductoVariables = {
+// The `EliminarBeneficio` mutation requires an argument of type `EliminarBeneficioVariables`:
+const eliminarBeneficioVars: EliminarBeneficioVariables = {
   id: ..., 
 };
 
-// Call the `eliminarProducto()` function to execute the mutation.
+// Call the `eliminarBeneficio()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await eliminarProducto(eliminarProductoVars);
+const { data } = await eliminarBeneficio(eliminarBeneficioVars);
 // Variables can be defined inline as well.
-const { data } = await eliminarProducto({ id: ..., });
+const { data } = await eliminarBeneficio({ id: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await eliminarProducto(dataConnect, eliminarProductoVars);
+const { data } = await eliminarBeneficio(dataConnect, eliminarBeneficioVars);
 
-console.log(data.digitalProduct_delete);
+console.log(data.beneficioCatalogo_delete);
 
 // Or, you can use the `Promise` API.
-eliminarProducto(eliminarProductoVars).then((response) => {
+eliminarBeneficio(eliminarBeneficioVars).then((response) => {
   const data = response.data;
-  console.log(data.digitalProduct_delete);
+  console.log(data.beneficioCatalogo_delete);
 });
 ```
 
-### Using `EliminarProducto`'s `MutationRef` function
+### Using `EliminarBeneficio`'s `MutationRef` function
 
 ```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
-import { connectorConfig, eliminarProductoRef, EliminarProductoVariables } from '@hotmart-srm/data';
+import { connectorConfig, eliminarBeneficioRef, EliminarBeneficioVariables } from '@hotmart-srm/data';
 
-// The `EliminarProducto` mutation requires an argument of type `EliminarProductoVariables`:
-const eliminarProductoVars: EliminarProductoVariables = {
+// The `EliminarBeneficio` mutation requires an argument of type `EliminarBeneficioVariables`:
+const eliminarBeneficioVars: EliminarBeneficioVariables = {
   id: ..., 
 };
 
-// Call the `eliminarProductoRef()` function to get a reference to the mutation.
-const ref = eliminarProductoRef(eliminarProductoVars);
+// Call the `eliminarBeneficioRef()` function to get a reference to the mutation.
+const ref = eliminarBeneficioRef(eliminarBeneficioVars);
 // Variables can be defined inline as well.
-const ref = eliminarProductoRef({ id: ..., });
+const ref = eliminarBeneficioRef({ id: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = eliminarProductoRef(dataConnect, eliminarProductoVars);
+const ref = eliminarBeneficioRef(dataConnect, eliminarBeneficioVars);
 
 // Call `executeMutation()` on the reference to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await executeMutation(ref);
 
-console.log(data.digitalProduct_delete);
+console.log(data.beneficioCatalogo_delete);
 
 // Or, you can use the `Promise` API.
 executeMutation(ref).then((response) => {
   const data = response.data;
-  console.log(data.digitalProduct_delete);
+  console.log(data.beneficioCatalogo_delete);
 });
 ```
 
-## EliminarProductor
-You can execute the `EliminarProductor` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [data/index.d.ts](./index.d.ts):
+## EliminarProveedor
+You can execute the `EliminarProveedor` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [data/index.d.ts](./index.d.ts):
 ```typescript
-eliminarProductor(vars: EliminarProductorVariables): MutationPromise<EliminarProductorData, EliminarProductorVariables>;
+eliminarProveedor(vars: EliminarProveedorVariables): MutationPromise<EliminarProveedorData, EliminarProveedorVariables>;
 
-interface EliminarProductorRef {
+interface EliminarProveedorRef {
   ...
   /* Allow users to create refs without passing in DataConnect */
-  (vars: EliminarProductorVariables): MutationRef<EliminarProductorData, EliminarProductorVariables>;
+  (vars: EliminarProveedorVariables): MutationRef<EliminarProveedorData, EliminarProveedorVariables>;
 }
-export const eliminarProductorRef: EliminarProductorRef;
+export const eliminarProveedorRef: EliminarProveedorRef;
 ```
 You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
 ```typescript
-eliminarProductor(dc: DataConnect, vars: EliminarProductorVariables): MutationPromise<EliminarProductorData, EliminarProductorVariables>;
+eliminarProveedor(dc: DataConnect, vars: EliminarProveedorVariables): MutationPromise<EliminarProveedorData, EliminarProveedorVariables>;
 
-interface EliminarProductorRef {
+interface EliminarProveedorRef {
   ...
-  (dc: DataConnect, vars: EliminarProductorVariables): MutationRef<EliminarProductorData, EliminarProductorVariables>;
+  (dc: DataConnect, vars: EliminarProveedorVariables): MutationRef<EliminarProveedorData, EliminarProveedorVariables>;
 }
-export const eliminarProductorRef: EliminarProductorRef;
+export const eliminarProveedorRef: EliminarProveedorRef;
 ```
 
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the eliminarProductorRef:
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the eliminarProveedorRef:
 ```typescript
-const name = eliminarProductorRef.operationName;
+const name = eliminarProveedorRef.operationName;
 console.log(name);
 ```
 
 ### Variables
-The `EliminarProductor` mutation requires an argument of type `EliminarProductorVariables`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
+The `EliminarProveedor` mutation requires an argument of type `EliminarProveedorVariables`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
 
 ```typescript
-export interface EliminarProductorVariables {
+export interface EliminarProveedorVariables {
   id: UUIDString;
 }
 ```
 ### Return Type
-Recall that executing the `EliminarProductor` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+Recall that executing the `EliminarProveedor` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `EliminarProductorData`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
+The `data` property is an object of type `EliminarProveedorData`, which is defined in [data/index.d.ts](./index.d.ts). It has the following fields:
 ```typescript
-export interface EliminarProductorData {
-  producer_delete?: Producer_Key | null;
+export interface EliminarProveedorData {
+  proveedorAsociado_delete?: ProveedorAsociado_Key | null;
 }
 ```
-### Using `EliminarProductor`'s action shortcut function
+### Using `EliminarProveedor`'s action shortcut function
 
 ```typescript
 import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, eliminarProductor, EliminarProductorVariables } from '@hotmart-srm/data';
+import { connectorConfig, eliminarProveedor, EliminarProveedorVariables } from '@hotmart-srm/data';
 
-// The `EliminarProductor` mutation requires an argument of type `EliminarProductorVariables`:
-const eliminarProductorVars: EliminarProductorVariables = {
+// The `EliminarProveedor` mutation requires an argument of type `EliminarProveedorVariables`:
+const eliminarProveedorVars: EliminarProveedorVariables = {
   id: ..., 
 };
 
-// Call the `eliminarProductor()` function to execute the mutation.
+// Call the `eliminarProveedor()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await eliminarProductor(eliminarProductorVars);
+const { data } = await eliminarProveedor(eliminarProveedorVars);
 // Variables can be defined inline as well.
-const { data } = await eliminarProductor({ id: ..., });
+const { data } = await eliminarProveedor({ id: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
-const { data } = await eliminarProductor(dataConnect, eliminarProductorVars);
+const { data } = await eliminarProveedor(dataConnect, eliminarProveedorVars);
 
-console.log(data.producer_delete);
+console.log(data.proveedorAsociado_delete);
 
 // Or, you can use the `Promise` API.
-eliminarProductor(eliminarProductorVars).then((response) => {
+eliminarProveedor(eliminarProveedorVars).then((response) => {
   const data = response.data;
-  console.log(data.producer_delete);
+  console.log(data.proveedorAsociado_delete);
 });
 ```
 
-### Using `EliminarProductor`'s `MutationRef` function
+### Using `EliminarProveedor`'s `MutationRef` function
 
 ```typescript
 import { getDataConnect, executeMutation } from 'firebase/data-connect';
-import { connectorConfig, eliminarProductorRef, EliminarProductorVariables } from '@hotmart-srm/data';
+import { connectorConfig, eliminarProveedorRef, EliminarProveedorVariables } from '@hotmart-srm/data';
 
-// The `EliminarProductor` mutation requires an argument of type `EliminarProductorVariables`:
-const eliminarProductorVars: EliminarProductorVariables = {
+// The `EliminarProveedor` mutation requires an argument of type `EliminarProveedorVariables`:
+const eliminarProveedorVars: EliminarProveedorVariables = {
   id: ..., 
 };
 
-// Call the `eliminarProductorRef()` function to get a reference to the mutation.
-const ref = eliminarProductorRef(eliminarProductorVars);
+// Call the `eliminarProveedorRef()` function to get a reference to the mutation.
+const ref = eliminarProveedorRef(eliminarProveedorVars);
 // Variables can be defined inline as well.
-const ref = eliminarProductorRef({ id: ..., });
+const ref = eliminarProveedorRef({ id: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
-const ref = eliminarProductorRef(dataConnect, eliminarProductorVars);
+const ref = eliminarProveedorRef(dataConnect, eliminarProveedorVars);
 
 // Call `executeMutation()` on the reference to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await executeMutation(ref);
 
-console.log(data.producer_delete);
+console.log(data.proveedorAsociado_delete);
 
 // Or, you can use the `Promise` API.
 executeMutation(ref).then((response) => {
   const data = response.data;
-  console.log(data.producer_delete);
+  console.log(data.proveedorAsociado_delete);
 });
 ```
 

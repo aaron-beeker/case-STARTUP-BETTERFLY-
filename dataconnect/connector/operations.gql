@@ -1,0 +1,58 @@
+mutation RegistrarProveedor(
+  $razonSocial: String!
+  $tipoSocio: String!
+  $emailContacto: String!
+) @auth(level: PUBLIC, insecureReason: "Demo public access") {
+  proveedorAsociado_insert(data: {
+    razonSocial: $razonSocial
+    tipoSocio: $tipoSocio
+    emailContacto: $emailContacto
+  })
+}
+
+mutation RegistrarBeneficio(
+  $nombreBeneficio: String!
+  $categoria: String!
+  $valorEconomico: Float!
+  $costoPuntosGamificacion: Int!
+  $proveedorId: UUID!
+) @auth(level: PUBLIC, insecureReason: "Demo public access") {
+  beneficioCatalogo_insert(data: {
+    nombreBeneficio: $nombreBeneficio
+    categoria: $categoria
+    valorEconomico: $valorEconomico
+    costoPuntosGamificacion: $costoPuntosGamificacion
+    proveedor: { id: $proveedorId }
+  })
+}
+
+mutation EliminarBeneficio($id: UUID!) @auth(level: PUBLIC, insecureReason: "Demo public access") {
+  beneficioCatalogo_delete(id: $id)
+}
+
+mutation EliminarProveedor($id: UUID!) @auth(level: PUBLIC, insecureReason: "Demo public access") {
+  proveedorAsociado_delete(id: $id)
+}
+
+query ListarProveedores @auth(level: PUBLIC, insecureReason: "Demo public access") {
+  proveedorAsociados {
+    id
+    razonSocial
+    tipoSocio
+    emailContacto
+  }
+}
+
+query ListarBeneficios @auth(level: PUBLIC, insecureReason: "Demo public access") {
+  beneficioCatalogos {
+    id
+    nombreBeneficio
+    categoria
+    valorEconomico
+    costoPuntosGamificacion
+    proveedor {
+      id
+      razonSocial
+    }
+  }
+}

@@ -8,7 +8,7 @@ schema:
       database: "startup-homart-database"
       cloudSql:
         instanceId: "startup-homart-instance"
-      schemaMigration: "MIGRATE_COMPATIBLE"
+      schemaMigration: "MIGRATE_STRICT"
 connectorDirs:
   - "./connector"
 datasource:
@@ -16,4 +16,4 @@ datasource:
     database: "startup-homart-database"
     cloudSql:
       instanceId: "startup-homart-instance"
-    schemaMigration: "MIGRATE_COMPATIBLE"
+    schemaMigration: "MIGRATE_STRICT"

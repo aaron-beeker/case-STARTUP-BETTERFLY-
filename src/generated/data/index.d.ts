@@ -10,149 +10,146 @@ export type DateString = string;
 
 
 
-export interface DigitalProduct_Key {
+export interface BeneficioCatalogo_Key {
   id: UUIDString;
-  __typename?: 'DigitalProduct_Key';
+  __typename?: 'BeneficioCatalogo_Key';
 }
 
-export interface EliminarProductoData {
-  digitalProduct_delete?: DigitalProduct_Key | null;
+export interface EliminarBeneficioData {
+  beneficioCatalogo_delete?: BeneficioCatalogo_Key | null;
 }
 
-export interface EliminarProductoVariables {
-  id: UUIDString;
-}
-
-export interface EliminarProductorData {
-  producer_delete?: Producer_Key | null;
-}
-
-export interface EliminarProductorVariables {
+export interface EliminarBeneficioVariables {
   id: UUIDString;
 }
 
-export interface ListarProductoresData {
-  producers: ({
+export interface EliminarProveedorData {
+  proveedorAsociado_delete?: ProveedorAsociado_Key | null;
+}
+
+export interface EliminarProveedorVariables {
+  id: UUIDString;
+}
+
+export interface ListarBeneficiosData {
+  beneficioCatalogos: ({
     id: UUIDString;
-    fullName: string;
-    contactEmail: string;
-    bankAccount: string;
-  } & Producer_Key)[];
-}
-
-export interface ListarProductosData {
-  digitalProducts: ({
-    id: UUIDString;
-    title: string;
-    format: string;
-    niche: string;
-    basePrice: number;
-    affiliateCommission: number;
-    producer?: {
+    nombreBeneficio: string;
+    categoria: string;
+    valorEconomico: number;
+    costoPuntosGamificacion: number;
+    proveedor: {
       id: UUIDString;
-      fullName: string;
-      contactEmail: string;
-    } & Producer_Key;
-  } & DigitalProduct_Key)[];
+      razonSocial: string;
+    } & ProveedorAsociado_Key;
+  } & BeneficioCatalogo_Key)[];
 }
 
-export interface Producer_Key {
+export interface ListarProveedoresData {
+  proveedorAsociados: ({
+    id: UUIDString;
+    razonSocial: string;
+    tipoSocio: string;
+    emailContacto: string;
+  } & ProveedorAsociado_Key)[];
+}
+
+export interface ProveedorAsociado_Key {
   id: UUIDString;
-  __typename?: 'Producer_Key';
+  __typename?: 'ProveedorAsociado_Key';
 }
 
-export interface RegistrarProductoData {
-  digitalProduct_insert: DigitalProduct_Key;
+export interface RegistrarBeneficioData {
+  beneficioCatalogo_insert: BeneficioCatalogo_Key;
 }
 
-export interface RegistrarProductoVariables {
-  title: string;
-  format: string;
-  niche: string;
-  basePrice: number;
-  affiliateCommission: number;
-  producerId: UUIDString;
+export interface RegistrarBeneficioVariables {
+  nombreBeneficio: string;
+  categoria: string;
+  valorEconomico: number;
+  costoPuntosGamificacion: number;
+  proveedorId: UUIDString;
 }
 
-export interface RegistrarProductorData {
-  producer_insert: Producer_Key;
+export interface RegistrarProveedorData {
+  proveedorAsociado_insert: ProveedorAsociado_Key;
 }
 
-export interface RegistrarProductorVariables {
-  fullName: string;
-  contactEmail: string;
-  bankAccount: string;
+export interface RegistrarProveedorVariables {
+  razonSocial: string;
+  tipoSocio: string;
+  emailContacto: string;
 }
 
-interface RegistrarProductorRef {
+interface RegistrarProveedorRef {
   /* Allow users to create refs without passing in DataConnect */
-  (vars: RegistrarProductorVariables): MutationRef<RegistrarProductorData, RegistrarProductorVariables>;
+  (vars: RegistrarProveedorVariables): MutationRef<RegistrarProveedorData, RegistrarProveedorVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: RegistrarProductorVariables): MutationRef<RegistrarProductorData, RegistrarProductorVariables>;
+  (dc: DataConnect, vars: RegistrarProveedorVariables): MutationRef<RegistrarProveedorData, RegistrarProveedorVariables>;
   operationName: string;
 }
-export const registrarProductorRef: RegistrarProductorRef;
+export const registrarProveedorRef: RegistrarProveedorRef;
 
-export function registrarProductor(vars: RegistrarProductorVariables): MutationPromise<RegistrarProductorData, RegistrarProductorVariables>;
-export function registrarProductor(dc: DataConnect, vars: RegistrarProductorVariables): MutationPromise<RegistrarProductorData, RegistrarProductorVariables>;
+export function registrarProveedor(vars: RegistrarProveedorVariables): MutationPromise<RegistrarProveedorData, RegistrarProveedorVariables>;
+export function registrarProveedor(dc: DataConnect, vars: RegistrarProveedorVariables): MutationPromise<RegistrarProveedorData, RegistrarProveedorVariables>;
 
-interface RegistrarProductoRef {
+interface RegistrarBeneficioRef {
   /* Allow users to create refs without passing in DataConnect */
-  (vars: RegistrarProductoVariables): MutationRef<RegistrarProductoData, RegistrarProductoVariables>;
+  (vars: RegistrarBeneficioVariables): MutationRef<RegistrarBeneficioData, RegistrarBeneficioVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: RegistrarProductoVariables): MutationRef<RegistrarProductoData, RegistrarProductoVariables>;
+  (dc: DataConnect, vars: RegistrarBeneficioVariables): MutationRef<RegistrarBeneficioData, RegistrarBeneficioVariables>;
   operationName: string;
 }
-export const registrarProductoRef: RegistrarProductoRef;
+export const registrarBeneficioRef: RegistrarBeneficioRef;
 
-export function registrarProducto(vars: RegistrarProductoVariables): MutationPromise<RegistrarProductoData, RegistrarProductoVariables>;
-export function registrarProducto(dc: DataConnect, vars: RegistrarProductoVariables): MutationPromise<RegistrarProductoData, RegistrarProductoVariables>;
+export function registrarBeneficio(vars: RegistrarBeneficioVariables): MutationPromise<RegistrarBeneficioData, RegistrarBeneficioVariables>;
+export function registrarBeneficio(dc: DataConnect, vars: RegistrarBeneficioVariables): MutationPromise<RegistrarBeneficioData, RegistrarBeneficioVariables>;
 
-interface EliminarProductoRef {
+interface EliminarBeneficioRef {
   /* Allow users to create refs without passing in DataConnect */
-  (vars: EliminarProductoVariables): MutationRef<EliminarProductoData, EliminarProductoVariables>;
+  (vars: EliminarBeneficioVariables): MutationRef<EliminarBeneficioData, EliminarBeneficioVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: EliminarProductoVariables): MutationRef<EliminarProductoData, EliminarProductoVariables>;
+  (dc: DataConnect, vars: EliminarBeneficioVariables): MutationRef<EliminarBeneficioData, EliminarBeneficioVariables>;
   operationName: string;
 }
-export const eliminarProductoRef: EliminarProductoRef;
+export const eliminarBeneficioRef: EliminarBeneficioRef;
 
-export function eliminarProducto(vars: EliminarProductoVariables): MutationPromise<EliminarProductoData, EliminarProductoVariables>;
-export function eliminarProducto(dc: DataConnect, vars: EliminarProductoVariables): MutationPromise<EliminarProductoData, EliminarProductoVariables>;
+export function eliminarBeneficio(vars: EliminarBeneficioVariables): MutationPromise<EliminarBeneficioData, EliminarBeneficioVariables>;
+export function eliminarBeneficio(dc: DataConnect, vars: EliminarBeneficioVariables): MutationPromise<EliminarBeneficioData, EliminarBeneficioVariables>;
 
-interface EliminarProductorRef {
+interface EliminarProveedorRef {
   /* Allow users to create refs without passing in DataConnect */
-  (vars: EliminarProductorVariables): MutationRef<EliminarProductorData, EliminarProductorVariables>;
+  (vars: EliminarProveedorVariables): MutationRef<EliminarProveedorData, EliminarProveedorVariables>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars: EliminarProductorVariables): MutationRef<EliminarProductorData, EliminarProductorVariables>;
+  (dc: DataConnect, vars: EliminarProveedorVariables): MutationRef<EliminarProveedorData, EliminarProveedorVariables>;
   operationName: string;
 }
-export const eliminarProductorRef: EliminarProductorRef;
+export const eliminarProveedorRef: EliminarProveedorRef;
 
-export function eliminarProductor(vars: EliminarProductorVariables): MutationPromise<EliminarProductorData, EliminarProductorVariables>;
-export function eliminarProductor(dc: DataConnect, vars: EliminarProductorVariables): MutationPromise<EliminarProductorData, EliminarProductorVariables>;
+export function eliminarProveedor(vars: EliminarProveedorVariables): MutationPromise<EliminarProveedorData, EliminarProveedorVariables>;
+export function eliminarProveedor(dc: DataConnect, vars: EliminarProveedorVariables): MutationPromise<EliminarProveedorData, EliminarProveedorVariables>;
 
-interface ListarProductoresRef {
+interface ListarProveedoresRef {
   /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<ListarProductoresData, undefined>;
+  (): QueryRef<ListarProveedoresData, undefined>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<ListarProductoresData, undefined>;
+  (dc: DataConnect): QueryRef<ListarProveedoresData, undefined>;
   operationName: string;
 }
-export const listarProductoresRef: ListarProductoresRef;
+export const listarProveedoresRef: ListarProveedoresRef;
 
-export function listarProductores(options?: ExecuteQueryOptions): QueryPromise<ListarProductoresData, undefined>;
-export function listarProductores(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListarProductoresData, undefined>;
+export function listarProveedores(options?: ExecuteQueryOptions): QueryPromise<ListarProveedoresData, undefined>;
+export function listarProveedores(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListarProveedoresData, undefined>;
 
-interface ListarProductosRef {
+interface ListarBeneficiosRef {
   /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<ListarProductosData, undefined>;
+  (): QueryRef<ListarBeneficiosData, undefined>;
   /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<ListarProductosData, undefined>;
+  (dc: DataConnect): QueryRef<ListarBeneficiosData, undefined>;
   operationName: string;
 }
-export const listarProductosRef: ListarProductosRef;
+export const listarBeneficiosRef: ListarBeneficiosRef;
 
-export function listarProductos(options?: ExecuteQueryOptions): QueryPromise<ListarProductosData, undefined>;
-export function listarProductos(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListarProductosData, undefined>;
+export function listarBeneficios(options?: ExecuteQueryOptions): QueryPromise<ListarBeneficiosData, undefined>;
+export function listarBeneficios(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListarBeneficiosData, undefined>;
 
